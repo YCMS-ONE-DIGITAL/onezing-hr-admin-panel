@@ -3,7 +3,13 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import Employees from "./components/employees/Employees"; // ✅ import Employees
+import Employees from "./components/employees/Employees";
+import Attendance from "./components/employees/Attendance";
+import Payroll from "./components/employees/Payroll";
+import Logout from "./components/Logout/Logout";
+import Settings from "./components/Settings/Settings"; // ✅ import Settings component
+
+
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -12,31 +18,22 @@ function App() {
     switch (activePage) {
       case "dashboard":
         return <Dashboard />;
-
       case "employees":
-        return <Employees />; // ✅ Show Employees component
-
+        return <Employees />;
       case "attendance":
-        return <h2 className="page-title">Attendance & Leave</h2>;
-
+        return <Attendance />;
       case "payroll":
-        return <h2 className="page-title">Payroll System</h2>;
-
+        return <Payroll />;
       case "projects":
         return <h2 className="page-title">Projects Overview</h2>;
-
       case "tasks":
         return <h2 className="page-title">Task Tracker</h2>;
-
       case "reports":
         return <h2 className="page-title">Reports & Analytics</h2>;
-
       case "settings":
-        return <h2 className="page-title">Settings</h2>;
-
+        return <Settings />;
       case "logout":
-        return <h2 className="page-title">Logging out...</h2>;
-
+        return <Logout />;
       default:
         return <h2 className="page-title">Select a section from the sidebar</h2>;
     }
@@ -44,10 +41,18 @@ function App() {
 
   return (
     <div className="App">
+      {/* Navbar */}
       <Navbar />
-      <Sidebar onSelect={setActivePage} />
-      <div style={{ marginLeft: "220px", marginTop: "60px", padding: "20px" }}>
-        {renderContent()}
+
+      {/* Layout Wrapper */}
+      <div className="layout">
+        {/* Sidebar */}
+        <Sidebar onSelect={setActivePage} />
+
+        {/* Main Content */}
+        <main className="main-content">
+          <div className="content-wrapper">{renderContent()}</div>
+        </main>
       </div>
     </div>
   );
