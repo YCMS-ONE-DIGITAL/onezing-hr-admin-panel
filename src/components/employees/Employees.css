@@ -1,0 +1,108 @@
+.employees-wrapper {
+  position: absolute;
+  top: 90px; /* navbar खाली */
+  left: 220px; /* sidebar नंतर */
+  right: 0;
+  bottom: 0;
+  background-color: #f9fafc;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* === Header Section === */
+.employees-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.employees-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* === Search & Add === */
+.employees-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 220px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.add-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  background-color: #2563eb;
+}
+
+/* === Table === */
+.employees-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.employees-table th,
+.employees-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.employees-table thead {
+  background-color: #f1f3f8;
+}
+
+.employees-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.status {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.active {
+  color: #22c55e;
+}
+
+.status.inactive {
+  color: #ef4444;
+}

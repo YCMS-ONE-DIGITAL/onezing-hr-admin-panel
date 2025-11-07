@@ -3,8 +3,6 @@ import "./Sidebar.css";
 import {
   FaHome,
   FaUsers,
-  FaMoneyBill,
-  FaTasks,
   FaChartBar,
   FaCog,
   FaSignOutAlt,
@@ -21,10 +19,12 @@ export default function Sidebar({ onSelect }) {
   return (
     <div className="sidebar">
       <ul>
+        {/* === Dashboard === */}
         <li onClick={() => onSelect("dashboard")}>
           <FaHome /> Dashboard
         </li>
 
+        {/* === HR Management === */}
         <li onClick={() => toggleMenu("hr")}>
           <FaUsers /> HR Management
         </li>
@@ -36,6 +36,7 @@ export default function Sidebar({ onSelect }) {
           </ul>
         )}
 
+        {/* === Project Management === */}
         <li onClick={() => toggleMenu("project")}>
           <FaBriefcase /> Project Management
         </li>
@@ -46,12 +47,17 @@ export default function Sidebar({ onSelect }) {
           </ul>
         )}
 
+        {/* === Reports === */}
         <li onClick={() => onSelect("reports")}>
           <FaChartBar /> Reports & Analytics
         </li>
+
+        {/* === Settings === */}
         <li onClick={() => onSelect("settings")}>
           <FaCog /> Settings
         </li>
+
+        {/* === Logout === */}
         <li onClick={() => onSelect("logout")}>
           <FaSignOutAlt /> Logout
         </li>
