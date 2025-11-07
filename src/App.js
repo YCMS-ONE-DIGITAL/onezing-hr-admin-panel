@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar/Navbar";
+import Sidebar from "./components/Sidebar/Sidebar";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const [activePage, setActivePage] = useState("dashboard");
+
+  const renderContent = () => {
+    switch (activePage) {
+      case "dashboard":
+        return <Dashboard />;
+      case "employees":
+        return <h2 className="page-title">Employees Management</h2>;
+      case "attendance":
+        return <h2 className="page-title">Attendance & Leave</h2>;
+      case "payroll":
+        return <h2 className="page-title">Payroll System</h2>;
+      case "projects":
+        return <h2 className="page-title">Projects Overview</h2>;
+      case "tasks":
+        return <h2 className="page-title">Task Tracker</h2>;
+      case "reports":
+        return <h2 className="page-title">Reports & Analytics</h2>;
+      case "settings":
+        return <h2 className="page-title">Settings</h2>;
+      case "logout":
+        return <h2 className="page-title">Logging out...</h2>;
+      default:
+        return <h2 className="page-title">Select a section from the sidebar</h2>;
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <Sidebar onSelect={setActivePage} />
+      <div style={{ marginLeft: "220px", marginTop: "60px", padding: "20px" }}>
+        {renderContent()}
+      </div>
     </div>
   );
 }
