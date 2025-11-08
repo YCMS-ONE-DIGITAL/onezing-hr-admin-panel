@@ -1,6 +1,6 @@
 import React from "react";
 import "./Employees.css";
-import { FaSearch, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 const Employees = () => {
   return (
