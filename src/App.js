@@ -7,9 +7,10 @@ import Employees from "./components/employees/Employees";
 import Attendance from "./components/employees/Attendance";
 import Payroll from "./components/employees/Payroll";
 import Logout from "./components/Logout/Logout";
-import Settings from "./components/Settings/Settings"; // ✅ import Settings component
-
-
+import Settings from "./components/Settings/Settings";
+import Reports from "./components/reports/Reports";
+import ProjectManagement from "./components/project/ProjectManagement";
+import Tasks from "./components/project/Tasks";
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -24,12 +25,12 @@ function App() {
         return <Attendance />;
       case "payroll":
         return <Payroll />;
-      case "projects":
-        return <h2 className="page-title">Projects Overview</h2>;
+      case "projectmanagement":
+        return <ProjectManagement />;
       case "tasks":
-        return <h2 className="page-title">Task Tracker</h2>;
+        return <Tasks />;
       case "reports":
-        return <h2 className="page-title">Reports & Analytics</h2>;
+        return <Reports />;
       case "settings":
         return <Settings />;
       case "logout":
@@ -41,15 +42,11 @@ function App() {
 
   return (
     <div className="App">
-      {/* Navbar */}
       <Navbar />
 
-      {/* Layout Wrapper */}
       <div className="layout">
-        {/* Sidebar */}
         <Sidebar onSelect={setActivePage} />
 
-        {/* Main Content */}
         <main className="main-content">
           <div className="content-wrapper">{renderContent()}</div>
         </main>

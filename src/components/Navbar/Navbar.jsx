@@ -7,10 +7,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <span className="project-name">HROne</span>
-
-        {/* Search box with icon inside */}
         <div className="search-wrapper">
-          <FaSearch className="search-icon" />
           <input
             type="text"
             className="search-input"

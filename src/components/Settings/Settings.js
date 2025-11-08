@@ -25,7 +25,6 @@ const Settings = () => {
 
   return (
     <div className="settings-page">
-      {/* Left Sidebar */}
       <div className="settings-sidebar">
         <h2>Settings</h2>
         <ul>
@@ -56,7 +55,6 @@ const Settings = () => {
         </ul>
       </div>
 
-      {/* Right Content */}
       <div className="settings-content">{renderSection()}</div>
     </div>
   );

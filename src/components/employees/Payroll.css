@@ -1,8 +1,7 @@
-/* Wrapper */
 .payroll-wrapper {
   position: absolute;
-  top: 62px; /* navbar खाली थोडंच space (adjust perfect) */
-  left: 220px; /* sidebar width */
+  top: 62px;
+  left: 220px;
   right: 0;
   bottom: 0;
   display: flex;
@@ -15,7 +14,7 @@
   overflow-y: auto;
 }
 
-/* Header */
+
 .payroll-header {
   width: 100%;
   margin-bottom: 30px;
@@ -33,7 +32,7 @@
   color: #6b7280;
 }
 
-/* Summary Cards Section */
+
 .payroll-summary-section {
   display: flex;
   justify-content: center;
@@ -64,7 +63,7 @@
 
 .payroll-icon {
   font-size: 34px;
-  color: #3b82f6; /* blue icon, optional: customize per card */
+  color: #3b82f6;
 }
 
 .payroll-summary-card h3 {

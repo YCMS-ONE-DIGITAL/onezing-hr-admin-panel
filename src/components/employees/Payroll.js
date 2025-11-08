@@ -3,7 +3,6 @@ import "./Payroll.css";
 import { FaUser, FaMoneyBillWave, FaClock, FaFileInvoiceDollar } from "react-icons/fa";
 
 const Payroll = () => {
-  // Sample summary data
   const summaryData = [
     { id: 1, title: "Total Employees", value: 120, icon: <FaUser /> },
     { id: 2, title: "Total Payroll Month", value: "₹12,00,000", icon: <FaMoneyBillWave /> },
@@ -13,13 +12,11 @@ const Payroll = () => {
 
   return (
     <div className="payroll-wrapper">
-      {/* ======= Header Section ======= */}
       <header className="payroll-header">
         <h1 className="payroll-heading">Payroll Management</h1>
         <p className="payroll-subtitle">Manage employee salaries, deductions, and payslips</p>
       </header>
 
-      {/* ======= Summary Cards ======= */}
       <div className="payroll-summary-section">
         {summaryData.map((item) => (
           <div key={item.id} className="payroll-summary-card">

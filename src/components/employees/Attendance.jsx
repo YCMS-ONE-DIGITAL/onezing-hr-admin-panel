@@ -13,7 +13,6 @@ const Attendance = () => {
 
   return (
     <div className="attendance-wrapper">
-      {/* ======= Page Header ======= */}
       <header className="attendance-header">
         <div>
           <h1 className="attendance-heading">Employee Attendance</h1>
@@ -23,7 +22,6 @@ const Attendance = () => {
         </div>
       </header>
 
-      {/* ======= Summary Cards ======= */}
       <div className="summary-section">
         <div className="summary-card present">
           <FaUserCheck className="summary-icon" />
@@ -58,7 +56,7 @@ const Attendance = () => {
         </div>
       </div>
 
-      {/* ======= Employee Attendance Table ======= */}
+
       <div className="attendance-table-section">
         <h2 className="table-heading">Attendance Details</h2>
         <table className="attendance-table">

@@ -11,7 +11,6 @@
   overflow-y: auto;
 }
 
-/* ===== Left Sidebar ===== */
 .settings-sidebar {
   width: 250px;
   background: #fff;
@@ -49,12 +48,10 @@
   color: #fff;
 }
 
-/* ===== Right Content ===== */
 .settings-content {
   flex: 1;
 }
 
-/* ===== Card styling for components ===== */
 .card {
   background: #fff;
   padding: 25px 30px;

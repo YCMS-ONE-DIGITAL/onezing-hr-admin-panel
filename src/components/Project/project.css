@@ -1,0 +1,84 @@
+.project-wrapper {
+  position: absolute;
+  top: 70px;
+  left: 220px;
+  right: 0;
+  bottom: 0;
+  background-color: #f5f6fa;
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+.project-wrapper h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #222;
+}
+
+.project-sections {
+  display: flex;
+  gap: 30px;
+}
+
+.project-form-section,
+.project-list-section {
+  flex: 1;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.project-form input,
+.project-form select,
+.project-form textarea {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.project-form .form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.add-btn {
+  padding: 8px 14px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 150px;
+  align-self: center;
+}
+
+.project-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.project-table th,
+.project-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.project-table th {
+  background-color: #eef1f7;
+  font-weight: 600;
+}

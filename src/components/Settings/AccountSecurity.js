@@ -19,7 +19,6 @@ const AccountSecurity = () => {
       return;
     }
     alert("Password updated successfully!");
-    // Here you can integrate API call for updating password
   };
 
   return (
@@ -60,9 +59,20 @@ const AccountSecurity = () => {
         </div>
 
         <div style={{ marginBottom: "10px" }}>
-          <a href="#" style={{ fontSize: "14px", color: "#3b82f6" }}>
+          <button
+            type="button"
+            onClick={() => alert("Forgot Password clicked!")}
+            style={{
+              fontSize: "14px",
+              color: "#3b82f6",
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+            }}
+          >
             Forgot Password?
-          </a>
+          </button>
         </div>
 
         <button type="submit" className="save-btn">

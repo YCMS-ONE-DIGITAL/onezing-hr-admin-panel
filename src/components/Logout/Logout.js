@@ -1,18 +1,16 @@
 import React, { useEffect } from "react";
 import "./Logout.css";
-import { useNavigate } from "react-router-dom"; // optional if using react-router
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const navigate = useNavigate(); // if using react-router
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // 🔹 Clear user session / token if any
-    localStorage.removeItem("token"); // example
+    localStorage.removeItem("token");
     sessionStorage.clear();
 
-    // 🔹 Redirect after 2 seconds (optional)
     const timer = setTimeout(() => {
-      navigate("/login"); // redirect to login page
+      navigate("/login");
     }, 2000);
 
     return () => clearTimeout(timer);

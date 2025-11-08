@@ -1,8 +1,7 @@
-/* ======= Wrapper ======= */
 .attendance-wrapper {
   position: absolute;
-  top: 62px; /* navbar खाली थोडंच space (adjust perfect) */
-  left: 220px; /* sidebar width */
+  top: 62px;
+  left: 220px;
   right: 0;
   bottom: 0;
   display: flex;
@@ -12,10 +11,9 @@
   background-color: #f9fafc;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto;       /* horizontal scroll बंद */
+  overflow-y: auto;
 }
 
-/* ======= Header Section ======= */
 .attendance-header {
   width: 100%;
   margin-bottom: 30px;
@@ -34,7 +32,7 @@
   color: #6b7280;
 }
 
-/* ======= Summary Cards ======= */
+
 .summary-section {
   display: flex;
   justify-content: center;
@@ -63,12 +61,12 @@
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
 }
 
-/* ======= Icon Styling ======= */
+
 .summary-icon {
   font-size: 34px;
 }
 
-/* Color themes */
+
 .present .summary-icon {
   color: #22c55e;
 }
@@ -85,7 +83,7 @@
   color: #f59e0b;
 }
 
-/* ======= Text ======= */
+
 .summary-card h3 {
   margin: 0;
   font-size: 18px;
@@ -100,16 +98,15 @@
 }
 
 
-/* ======= Attendance Table ======= */
-/* Table Section */
+
 .attendance-table-section {
-  width: 90%;                /* flexible width */
-  max-width: 1000px;         /* fixed max size */
+  width: 90%;
+  max-width: 1000px;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   padding: 40px 20px;
-  margin: 40px 0 0 0;        /* horizontal margin removed, flex align center करतो */
+  margin: 40px 0 0 0;
   text-align: left;
 }
 
@@ -144,7 +141,7 @@
   background-color: #f9fafc;
 }
 
-/* ======= Status Colors ======= */
+
 .status.present {
   color: #22c55e;
   font-weight: 600;

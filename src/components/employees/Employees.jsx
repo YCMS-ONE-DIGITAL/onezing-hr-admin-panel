@@ -5,12 +5,10 @@ import { FaSearch, FaPlus } from "react-icons/fa";
 const Employees = () => {
   return (
     <div className="employees-wrapper">
-      {/* === Header Section === */}
       <div className="employees-header">
         <h2>Employees</h2>
         <div className="employees-actions">
           <div className="search-box">
-            <FaSearch className="search-icon" />
             <input type="text" placeholder="Search employee..." />
           </div>
           <button className="add-btn">
@@ -19,7 +17,6 @@ const Employees = () => {
         </div>
       </div>
 
-      {/* === Table Section === */}
       <div className="employees-table">
         <table>
           <thead>

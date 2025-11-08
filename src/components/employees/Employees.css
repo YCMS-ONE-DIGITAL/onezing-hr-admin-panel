@@ -1,7 +1,7 @@
 .employees-wrapper {
   position: absolute;
-  top: 90px; /* navbar खाली */
-  left: 220px; /* sidebar नंतर */
+  top: 60px;
+  left: 220px;
   right: 0;
   bottom: 0;
   background-color: #f9fafc;
@@ -10,7 +10,7 @@
   overflow-y: auto;
 }
 
-/* === Header Section === */
+
 .employees-header {
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@
   color: #222;
 }
 
-/* === Search & Add === */
+
 .employees-actions {
   display: flex;
   align-items: center;
@@ -41,14 +41,6 @@
   border: 1px solid #ccc;
   outline: none;
   width: 220px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
 }
 
 .add-btn {
@@ -69,7 +61,7 @@
   background-color: #2563eb;
 }
 
-/* === Table === */
+
 .employees-table table {
   width: 100%;
   border-collapse: collapse;

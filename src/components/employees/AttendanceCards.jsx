@@ -1,4 +1,4 @@
-// 📄 src/components/employees/AttendanceCards.jsx
+
 import React from "react";
 import "./AttendanceCards.css";
 import { UserCheck, UserX, Coffee, Users } from "lucide-react";

@@ -1,79 +1,301 @@
-/* === Wrapper (Just below Navbar, beside Sidebar) === */
-.dashboard-wrapper {
+.dashboard-main {
   position: absolute;
-  top: 62px; /* navbar खाली थोडंच space (adjust perfect) */
-  left: 220px; /* sidebar width */
+  top: 70px;
+  left: 220px;
   right: 0;
   bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   background-color: #f9fafc;
-  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 30px;
   box-sizing: border-box;
-  overflow-y: auto;
+  flex-wrap: wrap;
 }
 
-/* === Grid Layout (2x2 Cards) === */
-.dashboard-grid {
+.dashboard-cards-left {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  width: 100%;
-  max-width: 900px;
+  flex: 1;
+  max-width: 520px;
 }
 
-/* === Card Style === */
 .dashboard-card {
   background: #ffffff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 18px 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .dashboard-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
-/* === Card Text === */
-.card-left {
+.icon-box {
+  font-size: 24px;
+  background: #f1f3f9;
+  border-radius: 50%;
+  padding: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
 }
 
-.card-title {
-  font-size: 16px;
+.text-box h4 {
+  font-size: 15px;
   color: #555;
+  margin: 0;
 }
 
-.card-value {
-  font-size: 22px;
-  font-weight: 700;
+.text-box p {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
   color: #222;
 }
 
-/* === Icon Circle === */
-.card-icon {
-  font-size: 24px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
-  padding: 10px;
+.dashboard-graph-right {
+  flex: 1.5;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  height: 470px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* === Chart Section === */
-.chart-card {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 20px;
-  width: 100%;
-  max-width: 900px;
-  margin-top: 40px; /* cards आणि chart मधला gap */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
+
+.graph-header h3 {
+  color: #2f2f2f;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-buttons button {
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #555;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.filter-buttons button.active,
+.filter-buttons button:hover {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.graph-wrapper {
+  margin-top: 10px;
+  flex: 1;
+}
+
+
+@media (max-width: 1024px) {
+  .dashboard-main {
+    flex-direction: column;
+    align-items: center;
+    left: 200px;
+    padding: 20px;
+  }
+
+  .dashboard-cards-left {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 700px;
+  }
+
+  .dashboard-graph-right {
+    width: 100%;
+    height: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  body, html {
+    overflow-x: hidden;
+  }
+
+
+  .sidebar {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 60px) !important;
+    background-color: #f1f1f1 !important;
+    z-index: 1000 !important;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar ul li {
+    width: 100%;
+    padding: 6px 0;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #222;
+    border-radius: 6px;
+  }
+
+  .sidebar ul li svg {
+    font-size: 16px;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 12px;
+  }
+
+  .project-name {
+    font-size: 18px;
+  }
+
+  .search-input {
+    width: 110px;
+    padding: 5px 8px 5px 26px;
+    font-size: 11px;
+  }
+
+  .nav-btn {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+
+  .dashboard-main {
+    position: relative;
+    top: 70px;
+    left: 45px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 18px;
+    background-color: #f9fafc;
+    padding: 10px 5px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    min-height: calc(100vh - 60px);
+  }
+
+
+  .dashboard-cards-left {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 22px;
+    row-gap: 16px;
+    justify-items: center;
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto;
+  }
+
+
+  .dashboard-card {
+    width: 100%;
+    border-radius: 10px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: 0.2s ease;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  }
+
+  .icon-box {
+    font-size: 13px;
+    padding: 5px;
+  }
+
+  .text-box h4 {
+    font-size: 10px;
+    color: #555;
+  }
+
+  .text-box p {
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+  }
+
+
+  .dashboard-graph-right {
+    width: 92%;
+    max-width: 310px;
+    height: 170px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5px auto 10px auto;
+  }
+
+  .graph-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3px;
+  }
+
+  .graph-header h3 {
+    font-size: 13px;
+  }
+
+  .filter-buttons button {
+    padding: 3px 7px;
+    font-size: 10px;
+  }
+}
+
+
+
