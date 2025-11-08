@@ -9,8 +9,9 @@ import Payroll from "./components/employees/Payroll";
 import Logout from "./components/Logout/Logout";
 import Settings from "./components/Settings/Settings";
 import Reports from "./components/reports/Reports";
-import ProjectManagement from "./components/project/ProjectManagement";
-import Tasks from "./components/project/Tasks";
+import ProjectManagement from "./components/Project/ProjectManagement";
+import Tasks from "./components/Project/Tasks";
+
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
