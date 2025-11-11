@@ -1,0 +1,95 @@
+.settings-page {
+  display: flex;
+  position: absolute;
+  top: 120px;
+  left: 280px;
+  right: 0;
+  bottom: 0;
+  background-color: #f9fafc;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.settings-sidebar {
+  width: 250px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-right: 20px;
+}
+
+.settings-sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.settings-sidebar li {
+  padding: 12px 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.settings-sidebar li:hover {
+  background-color: #e5e7eb;
+}
+
+.settings-sidebar li.active {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.settings-content {
+  flex: 1;
+}
+
+.card {
+  background: #fff;
+  padding: 25px 30px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.save-btn {
+  padding: 10px 18px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 10px;
+  align-self: flex-start;
+}
