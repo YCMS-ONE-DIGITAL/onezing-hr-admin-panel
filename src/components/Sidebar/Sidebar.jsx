@@ -92,7 +92,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         {openMenu === "project" && (
           <ul className="flex flex-col items-center w-full mt-1 space-y-1">
             <li
-              onClick={() => handleNavigation("/projectmanagement")}
+              onClick={() => handleNavigation("/project")}
               className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
             >
               Projects

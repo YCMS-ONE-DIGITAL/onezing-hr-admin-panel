@@ -125,29 +125,31 @@ const Payroll = () => {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-10">
+      {/* ✅ Smaller, balanced summary cards for laptop */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 max-w-[1300px] mx-auto">
         {summaryData.map((item) => (
           <div
             key={item.id}
-            className="bg-white shadow-md rounded-xl p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all hover:shadow-lg hover:-translate-y-1"
+            className="bg-white shadow-md rounded-xl p-4 md:p-5 flex flex-col items-center justify-center text-center transition-all hover:shadow-lg hover:-translate-y-1 w-full md:h-[150px]"
           >
             <div
-              className="text-[26px] md:text-[32px] mb-2"
+              className="text-[22px] md:text-[26px] mb-2"
               style={{ color: item.color }}
             >
               {item.icon}
             </div>
-            <h3 className="text-[13px] md:text-[16px] text-gray-600 font-medium">
+            <h3 className="text-[13px] md:text-[14px] text-gray-600 font-medium">
               {item.title}
             </h3>
-            <p className="font-semibold text-[15px] md:text-[18px] text-gray-800">
+            <p className="font-semibold text-[15px] md:text-[17px] text-gray-800">
               {item.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="bg-white shadow-md rounded-xl p-4 md:p-6 max-w-[1100px] mx-auto max-md:overflow-x-auto">
+      {/* ✅ Wider Table Section for laptop */}
+      <div className="bg-white shadow-md rounded-xl p-4 md:p-6 w-[97%] md:w-[90%] max-w-[1300px] mx-auto max-md:overflow-x-auto transition-all duration-300">
         <div className="flex justify-between items-center mb-4 max-md:flex-col max-md:gap-2">
           <h2 className="text-[18px] md:text-[22px] font-semibold text-gray-800 text-center w-full md:w-auto">
             Employee Payroll Summary
@@ -160,63 +162,66 @@ const Payroll = () => {
           </button>
         </div>
 
-        <table className="w-full min-w-[700px] border-collapse text-[13px] md:text-[15px]">
-          <thead className="bg-blue-500 text-white">
-            <tr>
-              <th className="py-3 px-4 text-left font-semibold">Employee</th>
-              <th className="py-3 px-4 text-left font-semibold">Designation</th>
-              <th className="py-3 px-4 text-left font-semibold">Salary</th>
-              <th className="py-3 px-4 text-left font-semibold">Deductions</th>
-              <th className="py-3 px-4 text-left font-semibold">Net Pay</th>
-              <th className="py-3 px-4 text-left font-semibold">Status</th>
-              <th className="py-3 px-4 text-center font-semibold">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {payrollData.map((emp) => (
-              <tr
-                key={emp.id}
-                className="border-b border-gray-200 hover:bg-blue-50 transition"
-              >
-                <td className="py-3 px-4">{emp.name}</td>
-                <td className="py-3 px-4">{emp.designation}</td>
-                <td className="py-3 px-4">{emp.salary}</td>
-                <td className="py-3 px-4">{emp.deductions}</td>
-                <td className="py-3 px-4 font-semibold">{emp.netPay}</td>
-                <td className="py-3 px-4 text-center">
-                  <span
-                    className={`px-3 py-1.5 rounded-full text-[13px] font-medium ${
-                      emp.status === "Paid"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {emp.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-center">
-                  <div className="flex justify-center gap-3">
-                    <button
-                      onClick={() => handleEdit(emp.id)}
-                      className="text-blue-500 hover:text-blue-700 transition"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(emp.id)}
-                      className="text-red-500 hover:text-red-700 transition"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[800px] border-collapse text-[13px] md:text-[15px]">
+            <thead className="bg-blue-500 text-white">
+              <tr>
+                <th className="py-3 px-4 text-left font-semibold">Employee</th>
+                <th className="py-3 px-4 text-left font-semibold">Designation</th>
+                <th className="py-3 px-4 text-left font-semibold">Salary</th>
+                <th className="py-3 px-4 text-left font-semibold">Deductions</th>
+                <th className="py-3 px-4 text-left font-semibold">Net Pay</th>
+                <th className="py-3 px-4 text-left font-semibold">Status</th>
+                <th className="py-3 px-4 text-center font-semibold">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {payrollData.map((emp) => (
+                <tr
+                  key={emp.id}
+                  className="border-b border-gray-200 hover:bg-blue-50 transition"
+                >
+                  <td className="py-3 px-4">{emp.name}</td>
+                  <td className="py-3 px-4">{emp.designation}</td>
+                  <td className="py-3 px-4">{emp.salary}</td>
+                  <td className="py-3 px-4">{emp.deductions}</td>
+                  <td className="py-3 px-4 font-semibold">{emp.netPay}</td>
+                  <td className="py-3 px-4 text-center">
+                    <span
+                      className={`px-3 py-1.5 rounded-full text-[13px] font-medium ${
+                        emp.status === "Paid"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {emp.status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <div className="flex justify-center gap-3">
+                      <button
+                        onClick={() => handleEdit(emp.id)}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(emp.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
+      {/* ✅ Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[999]">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[500px] relative">
@@ -299,4 +304,3 @@ const Payroll = () => {
 };
 
 export default Payroll;
-           

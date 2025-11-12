@@ -69,11 +69,13 @@ export default function Tasks() {
         max-md:relative max-md:left-0 max-md:top-[40px] max-md:p-4
       "
     >
+      {/* === Page Title === */}
       <h1 className="text-center text-[#222] font-semibold text-[28px] md:text-[32px]">
         Task Management
       </h1>
 
-      <div className="flex justify-between items-center w-[90%] md:w-[80%] max-w-[900px] mb-4">
+      {/* === Header Section === */}
+      <div className="flex justify-between items-center w-[95%] md:w-[90%] max-w-[1300px] mb-4">
         <h2 className="text-[18px] font-semibold text-gray-700">
           Employee Tasks
         </h2>
@@ -85,76 +87,86 @@ export default function Tasks() {
         </button>
       </div>
 
+      {/* === Table Section (Laptop width same as Payroll/Attendance) === */}
       <div
         className="
-          bg-white rounded-xl shadow-md p-4 md:p-6 w-[95%] md:w-[80%] max-w-[900px]
-          overflow-x-auto
+          bg-white rounded-xl shadow-md p-4 md:p-6 w-[95%] md:w-[90%] max-w-[1300px]
+          overflow-x-auto h-[420px] max-md:h-auto max-md:overflow-x-auto transition-all duration-300
         "
       >
-        <table className="w-full border-collapse text-[13px] md:text-[15px] text-center">
-          <thead>
-            <tr className="bg-[#f1f3f6] text-gray-800 font-semibold">
-              <th className="border border-gray-200 py-2 px-3">Name</th>
-              <th className="border border-gray-200 py-2 px-3">Description</th>
-              <th className="border border-gray-200 py-2 px-3">Priority</th>
-              <th className="border border-gray-200 py-2 px-3">Assigned To</th>
-              <th className="border border-gray-200 py-2 px-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.length > 0 ? (
-              tasks.map((t) => (
-                <tr key={t.id} className="text-gray-700 hover:bg-blue-50">
-                  <td className="border border-gray-200 py-2 px-3">{t.name}</td>
-                  <td className="border border-gray-200 py-2 px-3">
-                    {t.description || "-"}
-                  </td>
-                  <td
-                    className={`border border-gray-200 py-2 px-3 font-semibold ${
-                      t.priority === "Low"
-                        ? "text-green-600"
-                        : t.priority === "Medium"
-                        ? "text-orange-500"
-                        : "text-red-600"
-                    }`}
+        <div className="min-w-[800px] w-full">
+          <table className="w-full border-collapse text-[13px] md:text-[15px] text-center">
+            <thead>
+              <tr className="bg-[#f1f3f6] text-gray-800 font-semibold">
+                <th className="border border-gray-200 py-3 px-4">Name</th>
+                <th className="border border-gray-200 py-3 px-4">Description</th>
+                <th className="border border-gray-200 py-3 px-4">Priority</th>
+                <th className="border border-gray-200 py-3 px-4">Assigned To</th>
+                <th className="border border-gray-200 py-3 px-4">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {tasks.length > 0 ? (
+                tasks.map((t) => (
+                  <tr
+                    key={t.id}
+                    className="text-gray-700 hover:bg-blue-50 transition"
                   >
-                    {t.priority}
-                  </td>
-                  <td className="border border-gray-200 py-2 px-3">
-                    {t.assignedTo}
-                  </td>
-                  <td className="border border-gray-200 py-2 px-3">
-                    <div className="flex justify-center gap-4">
-                      <button
-                        onClick={() => handleEdit(t.id)}
-                        className="text-blue-500 hover:text-blue-700 transition"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(t.id)}
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+                    <td className="border border-gray-200 py-3 px-4">
+                      {t.name}
+                    </td>
+                    <td className="border border-gray-200 py-3 px-4">
+                      {t.description || "-"}
+                    </td>
+                    <td
+                      className={`border border-gray-200 py-3 px-4 font-semibold ${
+                        t.priority === "Low"
+                          ? "text-green-600"
+                          : t.priority === "Medium"
+                          ? "text-orange-500"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {t.priority}
+                    </td>
+                    <td className="border border-gray-200 py-3 px-4">
+                      {t.assignedTo}
+                    </td>
+                    <td className="border border-gray-200 py-3 px-4">
+                      <div className="flex justify-center gap-4">
+                        <button
+                          onClick={() => handleEdit(t.id)}
+                          className="text-blue-500 hover:text-blue-700 transition"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t.id)}
+                          className="text-red-500 hover:text-red-700 transition"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="py-4 text-gray-500 italic text-center"
+                  >
+                    No tasks added yet.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="py-3 text-gray-500 italic text-center"
-                >
-                  No tasks added yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
+      {/* === Modal Section === */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[999]">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[600px] relative">

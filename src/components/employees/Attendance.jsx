@@ -15,6 +15,7 @@ export default function Attendance() {
     { id: 2, name: "Sneha Jadhav", date: "2025-11-10", status: "Absent" },
     { id: 3, name: "Amit Kulkarni", date: "2025-11-10", status: "Leave" },
   ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -64,10 +65,10 @@ export default function Attendance() {
   };
 
   const summaryData = [
-    { title: "Total Employees", value: 120, icon: <Users />, color: "blue" },
-    { title: "Present Today", value: 98, icon: <UserCheck />, color: "green" },
-    { title: "Absent Today", value: 15, icon: <UserX />, color: "red" },
-    { title: "On Leave", value: 7, icon: <Coffee />, color: "yellow" },
+    { title: "Total Employees", value: 120, icon: <Users />, color: "#3B82F6" },
+    { title: "Present Today", value: 98, icon: <UserCheck />, color: "#16A34A" },
+    { title: "Absent Today", value: 15, icon: <UserX />, color: "#EF4444" },
+    { title: "On Leave", value: 7, icon: <Coffee />, color: "#F59E0B" },
   ];
 
   return (
@@ -78,6 +79,7 @@ export default function Attendance() {
         max-md:relative max-md:left-0 max-md:top-[60px] max-md:p-4
       "
     >
+      {/* === Header === */}
       <h1 className="text-center text-[28px] md:text-[32px] font-semibold text-gray-800 mb-2">
         Attendance & Leave Management
       </h1>
@@ -85,30 +87,38 @@ export default function Attendance() {
         Track employee attendance, leaves, and daily presence.
       </p>
 
-      <div
-        className="
-          grid grid-cols-2 md:grid-cols-4 gap-4 max-w-[1100px] mx-auto mb-8
-        "
-      >
+      {/* ✅ SAME CARD SIZE & WIDTH AS PAYROLL */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 w-full max-w-[1300px] mx-auto">
         {summaryData.map((card, i) => (
           <div
             key={i}
-            className={`bg-white rounded-xl shadow-md p-5 flex flex-col items-center justify-center gap-3 border-t-4 border-${card.color}-500`}
+            className="bg-white shadow-md rounded-xl p-4 md:p-6 flex flex-col items-center justify-center text-center 
+                       transition-all hover:shadow-lg hover:-translate-y-1 w-full h-[140px] md:h-[150px]"
+            style={{
+              flex: "1 1 0",
+              minWidth: "250px", // ✅ ensures width same as payroll cards
+              maxWidth: "300px",
+              margin: "0 auto",
+            }}
           >
             <div
-              className={`text-${card.color}-500 bg-${card.color}-100 p-3 rounded-full`}
+              className="text-[22px] md:text-[26px] mb-2"
+              style={{ color: card.color }}
             >
               {card.icon}
             </div>
-            <h3 className="text-gray-700 font-semibold text-[15px] text-center">
+            <h3 className="text-[13px] md:text-[14px] text-gray-600 font-medium">
               {card.title}
             </h3>
-            <p className="text-[20px] font-bold text-gray-900">{card.value}</p>
+            <p className="font-semibold text-[15px] md:text-[17px] text-gray-800">
+              {card.value}
+            </p>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between items-center mb-3 max-w-[1000px] mx-auto w-full">
+      {/* === Table Header === */}
+      <div className="flex justify-between items-center mb-3 w-[95%] md:w-[90%] max-w-[1300px] mx-auto">
         <h2 className="text-[18px] font-semibold text-gray-700">
           Attendance Records
         </h2>
@@ -120,14 +130,16 @@ export default function Attendance() {
         </button>
       </div>
 
+      {/* === Table Section === */}
       <div
         className="
-          bg-white shadow-md rounded-xl max-w-[1000px] mx-auto w-full
-          h-[400px] overflow-y-auto
+          bg-white shadow-md rounded-xl w-[97%] md:w-[90%] max-w-[1300px]
+          h-[450px] overflow-y-auto
           max-md:h-[350px] max-md:overflow-x-auto
+          transition-all duration-300
         "
       >
-        <div className="min-w-[700px] w-full">
+        <div className="min-w-[750px] w-full">
           <table className="w-full border-collapse text-[14px] md:text-[15px] text-center">
             <thead className="bg-blue-500 text-white sticky top-0 z-10">
               <tr>
@@ -190,6 +202,7 @@ export default function Attendance() {
         </div>
       </div>
 
+      {/* === Add/Edit Modal === */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[500px]">

@@ -3,27 +3,9 @@ import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Employees() {
   const [employees, setEmployees] = useState([
-    {
-      id: 1,
-      name: "Adrianna Stevens",
-      position: "Software Engineer",
-      department: "Development",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Ravi Patil",
-      position: "HR Manager",
-      department: "Human Resources",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Sneha Jadhav",
-      position: "UI/UX Designer",
-      department: "Design",
-      status: "Inactive",
-    },
+    { id: 1, name: "Adrianna Stevens", position: "Software Engineer", department: "Development", status: "Active" },
+    { id: 2, name: "Ravi Patil", position: "HR Manager", department: "Human Resources", status: "Active" },
+    { id: 3, name: "Sneha Jadhav", position: "UI/UX Designer", department: "Design", status: "Inactive" },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,11 +17,9 @@ export default function Employees() {
     status: "Active",
   });
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const openModal = () => setIsModalOpen(true);
-
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingEmployee(null);
@@ -54,15 +34,10 @@ export default function Employees() {
     }
 
     if (editingEmployee) {
-      setEmployees(
-        employees.map((emp) =>
-          emp.id === editingEmployee ? { ...formData, id: emp.id } : emp
-        )
-      );
+      setEmployees(employees.map((emp) => (emp.id === editingEmployee ? { ...formData, id: emp.id } : emp)));
     } else {
       setEmployees([...employees, { ...formData, id: Date.now() }]);
     }
-
     closeModal();
   };
 
@@ -94,7 +69,7 @@ export default function Employees() {
         Manage employee records, departments, and status easily.
       </p>
 
-      <div className="flex flex-col md:flex-row justify-between items-center w-[95%] md:w-[80%] max-w-[1000px] mb-6 gap-3">
+      <div className="flex flex-col md:flex-row justify-between items-center w-[95%] md:w-[90%] max-w-[1300px] mb-6 gap-3">
         <input
           type="text"
           placeholder="Search employee..."
@@ -108,10 +83,13 @@ export default function Employees() {
         </button>
       </div>
 
+      {/* 🔹 Table Section — widened for laptop view */}
       <div
         className="
-          bg-white shadow-md rounded-xl overflow-hidden w-[95%] md:w-[80%] max-w-[1000px]
-          h-[420px] overflow-y-auto max-md:h-[350px] max-md:overflow-x-auto
+          bg-white shadow-md rounded-xl overflow-hidden 
+          w-[97%] md:w-[90%] max-w-[1300px]
+          h-[460px] overflow-y-auto max-md:h-[350px] max-md:overflow-x-auto
+          transition-all duration-300
         "
       >
         <div className="min-w-[750px] w-full">
@@ -126,7 +104,6 @@ export default function Employees() {
                 <th className="py-3 px-4">Actions</th>
               </tr>
             </thead>
-
             <tbody>
               {employees.length > 0 ? (
                 employees.map((e) => (
@@ -135,16 +112,12 @@ export default function Employees() {
                     className="border-b border-gray-200 hover:bg-blue-50 transition"
                   >
                     <td className="py-3 px-4 text-gray-600">#{e.id}</td>
-                    <td className="py-3 px-4 font-medium text-gray-800">
-                      {e.name}
-                    </td>
+                    <td className="py-3 px-4 font-medium text-gray-800">{e.name}</td>
                     <td className="py-3 px-4 text-gray-700">{e.position}</td>
                     <td className="py-3 px-4 text-gray-700">{e.department}</td>
                     <td
                       className={`py-3 px-4 font-semibold ${
-                        e.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-500"
+                        e.status === "Active" ? "text-green-600" : "text-red-500"
                       }`}
                     >
                       {e.status}
@@ -169,10 +142,7 @@ export default function Employees() {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="text-center text-gray-500 italic py-5"
-                  >
+                  <td colSpan="6" className="text-center text-gray-500 italic py-5">
                     No employees found.
                   </td>
                 </tr>
@@ -182,6 +152,7 @@ export default function Employees() {
         </div>
       </div>
 
+      {/* === Add/Edit Modal === */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[500px]">
@@ -189,10 +160,7 @@ export default function Employees() {
               {editingEmployee ? "Edit Employee" : "Add Employee"}
             </h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 text-[14px]"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-[14px]">
               <input
                 type="text"
                 name="name"
