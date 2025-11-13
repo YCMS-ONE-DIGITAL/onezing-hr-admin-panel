@@ -13,6 +13,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Toolbar from "./components/Navbar/Toolbar";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./components/employees/Employees";
+import EmployeeDetail from "./components/employees/EmployeeDetail";
 import Attendance from "./components/employees/Attendance";
 import Payroll from "./components/employees/Payroll";
 import Logout from "./components/Logout/Logout";
@@ -21,14 +22,17 @@ import Reports from "./components/reports/Reports";
 import Project from "./components/Project/Project";
 import Tasks from "./components/Project/Tasks";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup"; // ✅ Added Signup Page
+import Signup from "./pages/Signup";
+
+// ⭐ NEW IMPORT – आवश्यक ✔
+import EmployeeCards from "./components/employees/EmployeeCards";
 
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const location = useLocation();
 
-  // ✅ Hide Navbar/Sidebar on login & signup pages
+  // Login & Signup वर Navbar/Sidebar hide
   const hideLayout =
     location.pathname === "/login" || location.pathname === "/signup";
 
@@ -51,26 +55,33 @@ function Layout() {
         )}
 
         <main
-          className={`bg-[#f9fafc] min-h-screen transition-all duration-500 ease-in-out 
-            ${hideLayout ? "pt-0" : "pt-[120px]"} 
+          className={`
+            bg-[#f9fafc] min-h-screen transition-all duration-500 ease-in-out
+            ${hideLayout ? "pt-0" : "pt-[120px]"}
             ${
               isMobile
                 ? "w-full ml-0 px-4"
                 : isSidebarOpen
                 ? "ml-[250px] px-8"
                 : "ml-[80px] px-8"
-            }`}
+            }
+          `}
         >
           <div className="max-w-[1200px] mx-auto w-full transition-all duration-500 ease-in-out">
             <Routes>
-              {/* 🔒 Auth Routes */}
+              {/* Auth pages */}
               <Route path="/" element={<Navigate to="/login" />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} /> {/* ✅ Added Signup Route */}
+              <Route path="/signup" element={<Signup />} />
 
-              {/* 🌐 Main Application Routes */}
+              {/* Main App Pages */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/employees" element={<Employees />} />
+              <Route path="/employee/:id" element={<EmployeeDetail />} />
+
+              {/* ⭐ NEW EMPLOYEE CARDS PAGE */}
+              <Route path="/employee-cards" element={<EmployeeCards />} />
+
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/payroll" element={<Payroll />} />
               <Route path="/project" element={<Project />} />
@@ -79,7 +90,7 @@ function Layout() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/logout" element={<Logout />} />
 
-              {/* 🚫 404 fallback */}
+              {/* Fallback 404 */}
               <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
           </div>
@@ -89,7 +100,6 @@ function Layout() {
   );
 }
 
-// ✅ Router wrapper
 export default function App() {
   return (
     <Router>

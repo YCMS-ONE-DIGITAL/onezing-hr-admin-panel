@@ -16,6 +16,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
+
   const handleNavigation = (path) => {
     navigate(path);
     if (window.innerWidth < 768) toggleSidebar();
@@ -38,6 +39,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       </div>
 
       <ul className="flex flex-col w-full mt-3 space-y-2 px-3">
+        
+        {/* ---------- Dashboard ---------- */}
         <li
           onClick={() => handleNavigation("/dashboard")}
           className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
@@ -46,6 +49,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <span className="max-md:hidden">Dashboard</span>
         </li>
 
+        {/* ---------- HR MANAGEMENT ---------- */}
         <li
           onClick={() => toggleMenu("hr")}
           className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
@@ -56,6 +60,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
         {openMenu === "hr" && (
           <ul className="flex flex-col items-center w-full mt-1 space-y-1">
+
+            {/* ----- Existing: Employees Button ----- */}
             <li
               onClick={() => handleNavigation("/employees")}
               className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
@@ -64,6 +70,16 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
               <span className="hidden md:inline">Employees</span>
             </li>
 
+            {/* 🌟 NEW BUTTON: EMPLOYEE PROFILE CARDS PAGE */}
+            <li
+              onClick={() => handleNavigation("/employee-cards")}
+              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
+            >
+              <span className="md:hidden">Cards</span>
+              <span className="hidden md:inline">Employee Profile</span>
+            </li>
+
+            {/* ----- Existing: Attendance ------- */}
             <li
               onClick={() => handleNavigation("/attendance")}
               className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
@@ -72,15 +88,18 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
               <span className="hidden md:inline">Attendance & Leave</span>
             </li>
 
+            {/* ----- Payroll ----- */}
             <li
               onClick={() => handleNavigation("/payroll")}
               className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
             >
               Payroll
             </li>
+
           </ul>
         )}
 
+        {/* ---------- Project Mgmt ---------- */}
         <li
           onClick={() => toggleMenu("project")}
           className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
@@ -106,6 +125,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </ul>
         )}
 
+        {/* ---------- Reports ---------- */}
         <li
           onClick={() => handleNavigation("/reports")}
           className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
@@ -114,6 +134,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <span className="max-md:hidden">Reports</span>
         </li>
 
+        {/* ---------- Settings ---------- */}
         <li
           onClick={() => handleNavigation("/settings")}
           className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
@@ -122,6 +143,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <span className="max-md:hidden">Settings</span>
         </li>
 
+        {/* ---------- Logout ---------- */}
         <li
           onClick={() => handleNavigation("/logout")}
           className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1 mt-auto mb-3"
@@ -129,6 +151,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <FaSignOutAlt className="text-[18px]" />
           <span className="max-md:hidden">Logout</span>
         </li>
+
       </ul>
     </div>
   );
