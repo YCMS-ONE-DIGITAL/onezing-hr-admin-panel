@@ -1,119 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUser,
   FaMoneyBillWave,
   FaClock,
   FaFileInvoiceDollar,
-  FaDownload,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 
-const Payroll = () => {
-  const summaryData = [
-    { id: 1, title: "Total Employees", value: 120, icon: <FaUser />, color: "#3B82F6" },
-    { id: 2, title: "Total Payroll (Month)", value: "₹12,00,000", icon: <FaMoneyBillWave />, color: "#16A34A" },
-    { id: 3, title: "Pending Payments", value: 5, icon: <FaClock />, color: "#FACC15" },
-    { id: 4, title: "Total Deductions", value: "₹1,50,000", icon: <FaFileInvoiceDollar />, color: "#EF4444" },
-  ];
+// ⭐ IMPORT YOUR SALARY SLIP POPUP FILE
+import SalarySlip from "./PayrollSlip.jsx";
 
-  const [payrollData, setPayrollData] = useState([
+
+const Payroll = () => {
+  // ------------------ LOAD EMPLOYEES FROM localStorage ------------------
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("employees");
+    if (saved) {
+      setEmployees(JSON.parse(saved));
+    }
+  }, []);
+
+  // ------------------ AUTO GENERATE PAYROLL DATA ------------------
+  const generatePayrollForEmployees = () => {
+    return employees.map((emp) => ({
+      id: emp.id,
+      name: `${emp.firstName} ${emp.lastName}`,
+      designation: emp.designation || "Employee",
+      salary: emp.salary || "₹30000",
+      deductions: emp.deductions || "₹700",
+      netPay: emp.netPay || "₹29300",
+      status: "Paid",
+    }));
+  };
+
+  const [payrollData, setPayrollData] = useState([]);
+
+  useEffect(() => {
+    setPayrollData(generatePayrollForEmployees());
+  }, [employees]);
+
+  // ------------------ SUMMARY CARDS ------------------
+  const summaryData = [
     {
       id: 1,
-      name: "Ravi Patil",
-      designation: "Software Engineer",
-      salary: "₹80,000",
-      deductions: "₹5,000",
-      netPay: "₹75,000",
-      status: "Paid",
+      title: "Total Employees",
+      value: payrollData.length,
+      icon: <FaUser />,
+      color: "#3B82F6",
     },
     {
       id: 2,
-      name: "Sneha Jadhav",
-      designation: "HR Manager",
-      salary: "₹90,000",
-      deductions: "₹8,000",
-      netPay: "₹82,000",
-      status: "Pending",
+      title: "Total Payroll",
+      value: "Auto Calculated",
+      icon: <FaMoneyBillWave />,
+      color: "#16A34A",
     },
-  ]);
+    {
+      id: 3,
+      title: "Paid Employees",
+      value: payrollData.length,
+      icon: <FaClock />,
+      color: "#FACC15",
+    },
+    {
+      id: 4,
+      title: "Total Deductions",
+      value: "₹" + payrollData.length * 700,
+      icon: <FaFileInvoiceDollar />,
+      color: "#EF4444",
+    },
+  ];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    designation: "",
-    salary: "",
-    deductions: "",
-    status: "Paid",
-  });
+  // ------------------ MODAL STATES ------------------
+  const [isSlipOpen, setIsSlipOpen] = useState(false);
+  const [selectedSlip, setSelectedSlip] = useState(null);
 
-  const [editingId, setEditingId] = useState(null);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setFormData({ name: "", designation: "", salary: "", deductions: "", status: "Paid" });
+  const handleViewSlip = (emp) => {
+    setSelectedSlip(emp);
+    setIsSlipOpen(true);
   };
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const calculateNetPay = () => {
-    const salary = parseInt(formData.salary || 0);
-    const deductions = parseInt(formData.deductions || 0);
-    return `₹${salary - deductions}`;
+  const handleEdit = () => {
+    alert("Salary editing module coming soon…");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name.trim() || !formData.salary.trim()) {
-      alert("Please fill required fields");
-      return;
-    }
-
-    const newEntry = {
-      id: editingId || Date.now(),
-      name: formData.name,
-      designation: formData.designation,
-      salary: `₹${formData.salary}`,
-      deductions: `₹${formData.deductions}`,
-      netPay: calculateNetPay(),
-      status: formData.status,
-    };
-
-    if (editingId) {
-      setPayrollData(payrollData.map((item) => (item.id === editingId ? newEntry : item)));
-      setEditingId(null);
-    } else {
-      setPayrollData([...payrollData, newEntry]);
-    }
-
-    handleCloseModal();
+  const handleDelete = (id) => {
+    setPayrollData((prev) => prev.filter((x) => x.id !== id));
   };
-
-  const handleEdit = (id) => {
-    const entry = payrollData.find((p) => p.id === id);
-    setFormData({
-      name: entry.name,
-      designation: entry.designation,
-      salary: entry.salary.replace(/[^\d]/g, ""),
-      deductions: entry.deductions.replace(/[^\d]/g, ""),
-      status: entry.status,
-    });
-    setEditingId(id);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (id) =>
-    setPayrollData(payrollData.filter((p) => p.id !== id));
 
   return (
     <div
       className="
         absolute top-[120px] left-[270px] right-0 bottom-0 bg-[#f9fafc]
         p-8 overflow-y-auto
-        max-md:relative max-md:left-0 max-md:top-[60px] max-md:p-4
-        max-md:h-[calc(100vh-60px)] max-md:overflow-y-scroll
+        max-md:left-0 max-md:top-[60px] max-md:p-4
       "
     >
       <header className="mb-8 text-center">
@@ -121,58 +105,41 @@ const Payroll = () => {
           Payroll Management
         </h1>
         <p className="text-gray-500 text-[13px] md:text-[15px] mt-1">
-          Manage employee salaries, deductions, and payslips efficiently.
+          Auto-generated payroll based on employee records
         </p>
       </header>
 
-      {/* ✅ Smaller, balanced summary cards for laptop */}
+      {/* SUMMARY CARDS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 max-w-[1300px] mx-auto">
         {summaryData.map((item) => (
           <div
             key={item.id}
-            className="bg-white shadow-md rounded-xl p-4 md:p-5 flex flex-col items-center justify-center text-center transition-all hover:shadow-lg hover:-translate-y-1 w-full md:h-[150px]"
+            className="bg-white shadow-md rounded-xl p-4 flex flex-col items-center text-center hover:shadow-lg transition"
           >
-            <div
-              className="text-[22px] md:text-[26px] mb-2"
-              style={{ color: item.color }}
-            >
+            <div className="text-[24px]" style={{ color: item.color }}>
               {item.icon}
             </div>
-            <h3 className="text-[13px] md:text-[14px] text-gray-600 font-medium">
-              {item.title}
-            </h3>
-            <p className="font-semibold text-[15px] md:text-[17px] text-gray-800">
-              {item.value}
-            </p>
+            <h3 className="text-[14px] text-gray-600">{item.title}</h3>
+            <p className="text-[16px] font-semibold">{item.value}</p>
           </div>
         ))}
       </div>
 
-      {/* ✅ Wider Table Section for laptop */}
-      <div className="bg-white shadow-md rounded-xl p-4 md:p-6 w-[97%] md:w-[90%] max-w-[1300px] mx-auto max-md:overflow-x-auto transition-all duration-300">
-        <div className="flex justify-between items-center mb-4 max-md:flex-col max-md:gap-2">
-          <h2 className="text-[18px] md:text-[22px] font-semibold text-gray-800 text-center w-full md:w-auto">
-            Employee Payroll Summary
-          </h2>
-          <button
-            onClick={handleOpenModal}
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-[13px] md:text-[15px] px-4 py-2 rounded-md shadow-sm transition"
-          >
-            <FaDownload className="text-[14px]" /> Generate Payslip
-          </button>
-        </div>
+      {/* TABLE */}
+      <div className="bg-white shadow-md rounded-xl p-6 w-[97%] md:w-[90%] max-w-[1300px] mx-auto">
+        <h2 className="text-xl font-semibold mb-4">Employee Payroll Summary</h2>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px] border-collapse text-[13px] md:text-[15px]">
+          <table className="w-full min-w-[800px] text-left">
             <thead className="bg-blue-500 text-white">
               <tr>
-                <th className="py-3 px-4 text-left font-semibold">Employee</th>
-                <th className="py-3 px-4 text-left font-semibold">Designation</th>
-                <th className="py-3 px-4 text-left font-semibold">Salary</th>
-                <th className="py-3 px-4 text-left font-semibold">Deductions</th>
-                <th className="py-3 px-4 text-left font-semibold">Net Pay</th>
-                <th className="py-3 px-4 text-left font-semibold">Status</th>
-                <th className="py-3 px-4 text-center font-semibold">Actions</th>
+                <th className="py-3 px-4">Employee</th>
+                <th className="py-3 px-4">Designation</th>
+                <th className="py-3 px-4">Salary</th>
+                <th className="py-3 px-4">Deductions</th>
+                <th className="py-3 px-4">Net Pay</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
 
@@ -186,10 +153,11 @@ const Payroll = () => {
                   <td className="py-3 px-4">{emp.designation}</td>
                   <td className="py-3 px-4">{emp.salary}</td>
                   <td className="py-3 px-4">{emp.deductions}</td>
-                  <td className="py-3 px-4 font-semibold">{emp.netPay}</td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-3 px-4">{emp.netPay}</td>
+
+                  <td className="py-3 px-4">
                     <span
-                      className={`px-3 py-1.5 rounded-full text-[13px] font-medium ${
+                      className={`px-3 py-1 rounded-full ${
                         emp.status === "Paid"
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
@@ -198,21 +166,28 @@ const Payroll = () => {
                       {emp.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-center">
-                    <div className="flex justify-center gap-3">
-                      <button
-                        onClick={() => handleEdit(emp.id)}
-                        className="text-blue-500 hover:text-blue-700 transition"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(emp.id)}
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+
+                  <td className="py-3 px-4 flex justify-center gap-4 text-lg">
+                    <button
+                      onClick={() => handleViewSlip(emp)}
+                      className="text-green-600 hover:text-green-800"
+                    >
+                      <FaEye />
+                    </button>
+
+                    <button
+                      onClick={() => handleEdit(emp.id)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <FaEdit />
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(emp.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <FaTrash />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -221,83 +196,9 @@ const Payroll = () => {
         </div>
       </div>
 
-      {/* ✅ Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[999]">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[500px] relative">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              {editingId ? "Edit Payslip" : "Generate Payslip"}
-            </h2>
-
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 text-[14px]"
-            >
-              <input
-                type="text"
-                name="name"
-                placeholder="Employee Name"
-                value={formData.name}
-                onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-                required
-              />
-              <input
-                type="text"
-                name="designation"
-                placeholder="Designation"
-                value={formData.designation}
-                onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              />
-              <input
-                type="number"
-                name="salary"
-                placeholder="Salary (₹)"
-                value={formData.salary}
-                onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              />
-              <input
-                type="number"
-                name="deductions"
-                placeholder="Deductions (₹)"
-                value={formData.deductions}
-                onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              />
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              >
-                <option>Paid</option>
-                <option>Pending</option>
-              </select>
-
-              <p className="text-gray-600 text-sm mt-1">
-                <strong>Net Pay:</strong> {calculateNetPay()}
-              </p>
-
-              <div className="flex justify-end gap-3 mt-4">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                  Done
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {/* ⭐ SHOW SALARY SLIP POPUP HERE ⭐ */}
+      {isSlipOpen && selectedSlip && (
+        <SalarySlip slip={selectedSlip} onClose={() => setIsSlipOpen(false)} />
       )}
     </div>
   );
