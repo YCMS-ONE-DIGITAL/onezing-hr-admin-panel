@@ -22,136 +22,100 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     if (window.innerWidth < 768) toggleSidebar();
   };
 
+  // ⭐ Laptop view button styling
+  const mainButton =
+    "flex items-center gap-3 px-5 py-3 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer transition-all text-[16px] max-md:flex-col max-md:text-[10px] max-md:py-1 max-md:px-2";
+
+  const subButton =
+    "bg-white hover:bg-gray-200 rounded-md px-3 py-2 cursor-pointer text-[12px] md:text-[14px] text-gray-700 text-center w-[95%] shadow-sm transition-all";
+
   return (
     <div
       className={`
         fixed top-[108px] left-0
-        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} 
-        w-[250px] md:w-[250px] h-[calc(100vh-108px)]
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        w-[300px] md:w-[300px]   /* ⭐ Laptop width increased */
+        h-[calc(100vh-108px)]
         bg-gray-100 shadow-md transition-all duration-500 ease-in-out
         flex flex-col items-center z-[999]
         max-md:w-[80px]
       `}
     >
+      {/* LOGO */}
       <div className="flex flex-col items-center py-4 w-full border-b border-gray-300">
         <img src="/logo192.png" alt="logo" className="w-10 h-10 rounded-full mb-1" />
         <span className="text-sm font-semibold text-gray-700 max-md:hidden">HROne</span>
       </div>
 
+      {/* MENU */}
       <ul className="flex flex-col w-full mt-3 space-y-2 px-3">
-        
-        {/* ---------- Dashboard ---------- */}
-        <li
-          onClick={() => handleNavigation("/dashboard")}
-          className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
-        >
-          <FaHome className="text-[18px]" />
+
+        {/* Dashboard */}
+        <li onClick={() => handleNavigation("/dashboard")} className={mainButton}>
+          <FaHome className="text-[20px]" />
           <span className="max-md:hidden">Dashboard</span>
         </li>
 
-        {/* ---------- HR MANAGEMENT ---------- */}
-        <li
-          onClick={() => toggleMenu("hr")}
-          className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
-        >
-          <FaUsers className="text-[18px]" />
+        {/* HR Management */}
+        <li onClick={() => toggleMenu("hr")} className={mainButton}>
+          <FaUsers className="text-[20px]" />
           <span className="max-md:hidden">HR Management</span>
         </li>
 
         {openMenu === "hr" && (
-          <ul className="flex flex-col items-center w-full mt-1 space-y-1">
-
-            {/* ----- Existing: Employees Button ----- */}
-            <li
-              onClick={() => handleNavigation("/employees")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
-              <span className="md:hidden">Emp</span>
-              <span className="hidden md:inline">Employees</span>
+          <ul className="flex flex-col items-center w-full mt-1 space-y-2">
+            <li onClick={() => handleNavigation("/employees")} className={subButton}>
+              Employees
             </li>
-
-            {/* 🌟 NEW BUTTON: EMPLOYEE PROFILE CARDS PAGE */}
-            <li
-              onClick={() => handleNavigation("/employee-cards")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
-              <span className="md:hidden">Cards</span>
-              <span className="hidden md:inline">Employee Profile</span>
+            <li onClick={() => handleNavigation("/employee-cards")} className={subButton}>
+              Employee Profile
             </li>
-
-            {/* ----- Existing: Attendance ------- */}
-            <li
-              onClick={() => handleNavigation("/attendance")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
-              <span className="md:hidden">Leave</span>
-              <span className="hidden md:inline">Attendance & Leave</span>
+            <li onClick={() => handleNavigation("/attendance")} className={subButton}>
+              Attendance & Leave
             </li>
-
-            {/* ----- Payroll ----- */}
-            <li
-              onClick={() => handleNavigation("/payroll")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
+            <li onClick={() => handleNavigation("/payroll")} className={subButton}>
               Payroll
             </li>
-
           </ul>
         )}
 
-        {/* ---------- Project Mgmt ---------- */}
-        <li
-          onClick={() => toggleMenu("project")}
-          className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
-        >
-          <FaBriefcase className="text-[18px]" />
+        {/* Project Management */}
+        <li onClick={() => toggleMenu("project")} className={mainButton}>
+          <FaBriefcase className="text-[20px]" />
           <span className="max-md:hidden">Project Management</span>
         </li>
 
         {openMenu === "project" && (
-          <ul className="flex flex-col items-center w-full mt-1 space-y-1">
-            <li
-              onClick={() => handleNavigation("/project")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
+          <ul className="flex flex-col items-center w-full mt-1 space-y-2">
+            <li onClick={() => handleNavigation("/project")} className={subButton}>
               Projects
             </li>
-            <li
-              onClick={() => handleNavigation("/tasks")}
-              className="bg-white hover:bg-gray-200 rounded-md px-3 py-1 cursor-pointer text-[10px] md:text-[13px] text-gray-700 text-center w-[95%] shadow-sm transition-all"
-            >
+            <li onClick={() => handleNavigation("/tasks")} className={subButton}>
               Tasks
             </li>
           </ul>
         )}
 
-        {/* ---------- Reports ---------- */}
-        <li
-          onClick={() => handleNavigation("/reports")}
-          className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
-        >
-          <FaChartBar className="text-[18px]" />
+        {/* Reports */}
+        <li onClick={() => handleNavigation("/reports")} className={mainButton}>
+          <FaChartBar className="text-[20px]" />
           <span className="max-md:hidden">Reports</span>
         </li>
 
-        {/* ---------- Settings ---------- */}
-        <li
-          onClick={() => handleNavigation("/settings")}
-          className="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1"
-        >
-          <FaCog className="text-[18px]" />
+        {/* Settings */}
+        <li onClick={() => handleNavigation("/settings")} className={mainButton}>
+          <FaCog className="text-[20px]" />
           <span className="max-md:hidden">Settings</span>
         </li>
 
-        {/* ---------- Logout ---------- */}
+        {/* Logout */}
         <li
           onClick={() => handleNavigation("/logout")}
-          className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 rounded-md cursor-pointer text-[15px] transition-all max-md:flex-col max-md:text-[10px] max-md:py-1 mt-auto mb-3"
+          className="flex items-center gap-3 px-5 py-3 text-red-600 hover:bg-red-100 rounded-md cursor-pointer transition-all text-[16px] max-md:flex-col max-md:text-[10px] max-md:py-1 max-md:px-2 mt-auto mb-3"
         >
-          <FaSignOutAlt className="text-[18px]" />
+          <FaSignOutAlt className="text-[20px]" />
           <span className="max-md:hidden">Logout</span>
         </li>
-
       </ul>
     </div>
   );

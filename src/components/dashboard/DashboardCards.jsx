@@ -10,6 +10,9 @@ import {
   Bug,
   Smile,
   Activity,
+  Bell,
+  Megaphone,
+  Award,
 } from "lucide-react";
 import {
   LineChart,
@@ -22,9 +25,10 @@ import {
 } from "recharts";
 
 export default function DashboardCards() {
+
   const [chartType, setChartType] = useState("Daily");
 
-  const chartDataSets = {
+  const chartData = {
     Daily: [
       { month: "Mon", performance: 4 },
       { month: "Tue", performance: 8 },
@@ -33,21 +37,6 @@ export default function DashboardCards() {
       { month: "Fri", performance: 6 },
       { month: "Sat", performance: 11 },
       { month: "Sun", performance: 8 },
-    ],
-    Monthly: [
-      { month: "Jan", performance: 55 },
-      { month: "Feb", performance: 72 },
-      { month: "Mar", performance: 61 },
-      { month: "Apr", performance: 85 },
-      { month: "May", performance: 77 },
-      { month: "Jun", performance: 90 },
-    ],
-    Yearly: [
-      { month: "2020", performance: 68 },
-      { month: "2021", performance: 75 },
-      { month: "2022", performance: 82 },
-      { month: "2023", performance: 91 },
-      { month: "2024", performance: 87 },
     ],
   };
 
@@ -64,111 +53,144 @@ export default function DashboardCards() {
     { title: "Resource Utilization", value: "87%", icon: <Activity />, color: "#9C27B0" },
   ];
 
-  return (
-    <div
-      className="
-        flex flex-wrap justify-between items-start gap-8 p-8 bg-[#f9fafc]
-        min-h-screen overflow-y-auto
-        max-md:flex-col max-md:items-center max-md:gap-6 max-md:p-3 max-md:overflow-y-scroll
-      "
-    >
-      <div
-        className="
-          grid grid-cols-2 gap-6 flex-1 max-w-[700px]
-          max-lg:max-w-[600px]
-          max-md:grid-cols-2 max-md:gap-3 max-md:w-full
-        "
-      >
-        {cards.map((card, i) => (
-          <div
-            key={i}
-            className="
-              bg-white rounded-xl p-5 flex items-center gap-4 shadow-md
-              hover:-translate-y-1 hover:shadow-lg transition-transform duration-200 cursor-pointer
-              max-md:flex-col max-md:items-center max-md:justify-center max-md:p-3
-              max-md:h-[110px]
-            "
-          >
-            <div
-              className="
-                rounded-full p-3 flex items-center justify-center text-[24px]
-                max-md:text-[18px] max-md:p-2
-              "
-              style={{ color: card.color, backgroundColor: "#f1f3f9" }}
-            >
-              {card.icon}
-            </div>
-            <div className="flex flex-col items-start max-md:items-center">
-              <h4 className="text-[15px] text-[#555] max-md:text-[12px] text-center">
-                {card.title}
-              </h4>
-              <p className="text-[18px] font-semibold text-[#222] max-md:text-[14px] text-center">
-                {card.value}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+  const performers = [
+    { name: "Harshal Mali", score: 98 },
+    { name: "Sneha Kulkarni", score: 94 },
+    { name: "Rohan Deshmukh", score: 90 },
+  ];
 
-      <div
-        className="
-          flex-[1.5] bg-white rounded-xl p-6 shadow-md
-          flex flex-col justify-between
-          max-md:w-full max-md:p-4 max-md:order-last
-        "
-      >
-        <div className="flex justify-between items-center mb-3 max-md:flex-col max-md:items-center max-md:text-center max-md:gap-2">
-          <h3 className="text-[#2f2f2f] font-semibold text-[18px] max-md:text-[15px] text-center">
-            Project Performance Analytics
-          </h3>
-          <div className="flex gap-2 justify-center">
-            {["Daily", "Monthly", "Yearly"].map((label) => (
-              <button
-                key={label}
-                onClick={() => setChartType(label)}
-                className={`
-                  border border-gray-300 rounded-md px-3 py-1 text-[13px] transition
-                  ${
-                    chartType === label
-                      ? "bg-[#007bff] text-white border-[#007bff]"
-                      : "bg-white text-gray-600 hover:bg-[#007bff] hover:text-white hover:border-[#007bff]"
-                  }
-                  max-md:text-[11px] max-md:px-2 max-md:py-1
-                `}
+  const announcements = [
+    "Office holiday on Monday.",
+    "Awards Night this Friday.",
+    "Submit appraisals before 25th.",
+  ];
+
+  const activities = [
+    "Ravi updated project tasks.",
+    "Sneha added new UI designs.",
+    "Amit submitted leave request.",
+  ];
+
+  return (
+    <div className="w-full flex flex-col gap-10">
+
+      {/* =========================
+         TOP SECTION (CARDS + RIGHT PANEL)
+      ========================== */}
+      <div className="flex gap-8 w-full">
+
+        {/* LEFT — CARDS GRID (compact cards) */}
+        <div className="flex-1 grid grid-cols-3 gap-4 max-xl:grid-cols-2">
+
+          {cards.map((card, i) => (
+            <div
+              key={i}
+              className="
+                bg-white rounded-xl shadow 
+                p-3 flex items-center gap-3 
+                border border-gray-200 
+                hover:shadow-lg transition
+              "
+            >
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-[18px]"
+                style={{ color: card.color, backgroundColor: "#EEF1F8" }}
               >
-                {label}
-              </button>
-            ))}
-          </div>
+                {card.icon}
+              </div>
+
+              <div>
+                <p className="text-gray-500 text-xs">{card.title}</p>
+                <h3 className="text-[17px] font-semibold text-gray-800">
+                  {card.value}
+                </h3>
+              </div>
+            </div>
+          ))}
+
         </div>
 
-        <div
-          className="
-            w-full mt-4 flex justify-center items-center
-            overflow-y-scroll scrollbar-hide
-            max-md:h-[320px] max-md:overflow-y-scroll max-md:pb-4
-          "
-          style={{
-            height: "380px",
-          }}
-        >
-          <ResponsiveContainer width="100%" height={320}>
-            <LineChart
-              data={chartDataSets[chartType]}
-              margin={{ top: 10, right: 15, left: -10, bottom: 5 }}
+        {/* ======================
+           RIGHT — LARGE PANEL
+        ====================== */}
+        <div className="w-[420px] flex flex-col gap-6">
+
+          {/* Top Performers */}
+          <div className="bg-white border rounded-xl shadow p-6">
+            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+              <Award size={20} /> Top Performers
+            </h2>
+
+            {performers.map((p, i) => (
+              <div key={i} className="flex justify-between py-2 border-b text-sm">
+                <span>{p.name}</span>
+                <span className="font-semibold">{p.score} pts</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Announcements */}
+          <div className="bg-white border rounded-xl shadow p-6">
+            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+              <Megaphone size={20} /> Announcements
+            </h2>
+
+            {announcements.map((a, i) => (
+              <p key={i} className="border-b py-2 text-sm">
+                {a}
+              </p>
+            ))}
+          </div>
+
+          {/* Recent Activities */}
+          <div className="bg-white border rounded-xl shadow p-6">
+            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+              <Bell size={20} /> Recent Activities
+            </h2>
+
+            {activities.map((a, i) => (
+              <p key={i} className="border-b py-2 text-sm">
+                {a}
+              </p>
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================
+          FULL WIDTH GRAPH SECTION
+      ========================== */}
+      <div className="bg-white border rounded-xl shadow p-6 w-full">
+        <h2 className="text-xl font-semibold mb-4">Project Performance Analytics</h2>
+
+        <div className="flex gap-3 mb-4">
+          {["Daily", "Monthly", "Yearly"].map((label) => (
+            <button
+              key={label}
+              onClick={() => setChartType(label)}
+              className={`
+                px-3 py-1 rounded-md text-sm border transition
+                ${
+                  chartType === label
+                    ? "bg-[#007bff] text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-200"
+                }
+              `}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-              <XAxis dataKey="month" stroke="#555" />
-              <YAxis stroke="#555" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ height: "270px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData[chartType]}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
               <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="performance"
-                stroke="#007bff"
-                strokeWidth={3}
-                dot={{ fill: "#007bff", r: 4 }}
-                activeDot={{ r: 6 }}
-              />
+              <Line type="monotone" dataKey="performance" stroke="#007bff" strokeWidth={3} />
             </LineChart>
           </ResponsiveContainer>
         </div>
