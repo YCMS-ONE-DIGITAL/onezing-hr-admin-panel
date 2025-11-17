@@ -14,7 +14,12 @@ export default function Dashboard() {
         px-12 py-8
         overflow-y-auto
         transition-all
-        max-md:left-0 max-md:top-[70px] max-md:p-4
+
+        /* ⭐ MOBILE FIX */
+        max-md:left-0 
+        max-md:top-[70px] 
+        max-md:px-4 
+        max-md:py-4
       "
     >
       <DashboardCards />

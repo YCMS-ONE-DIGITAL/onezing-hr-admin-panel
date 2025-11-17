@@ -9,22 +9,17 @@ import {
   FaEye,
 } from "react-icons/fa";
 
-// ⭐ IMPORT YOUR SALARY SLIP POPUP FILE
 import SalarySlip from "./PayrollSlip.jsx";
 
-
 const Payroll = () => {
-  // ------------------ LOAD EMPLOYEES FROM localStorage ------------------
   const [employees, setEmployees] = useState([]);
+  const [payrollData, setPayrollData] = useState([]);
 
   useEffect(() => {
     const saved = localStorage.getItem("employees");
-    if (saved) {
-      setEmployees(JSON.parse(saved));
-    }
+    if (saved) setEmployees(JSON.parse(saved));
   }, []);
 
-  // ------------------ AUTO GENERATE PAYROLL DATA ------------------
   const generatePayrollForEmployees = () => {
     return employees.map((emp) => ({
       id: emp.id,
@@ -37,13 +32,10 @@ const Payroll = () => {
     }));
   };
 
-  const [payrollData, setPayrollData] = useState([]);
-
   useEffect(() => {
     setPayrollData(generatePayrollForEmployees());
   }, [employees]);
 
-  // ------------------ SUMMARY CARDS ------------------
   const summaryData = [
     {
       id: 1,
@@ -75,17 +67,12 @@ const Payroll = () => {
     },
   ];
 
-  // ------------------ MODAL STATES ------------------
   const [isSlipOpen, setIsSlipOpen] = useState(false);
   const [selectedSlip, setSelectedSlip] = useState(null);
 
   const handleViewSlip = (emp) => {
     setSelectedSlip(emp);
     setIsSlipOpen(true);
-  };
-
-  const handleEdit = () => {
-    alert("Salary editing module coming soon…");
   };
 
   const handleDelete = (id) => {
@@ -109,18 +96,23 @@ const Payroll = () => {
         </p>
       </header>
 
-      {/* SUMMARY CARDS */}
+      {/* ⭐ UPDATED SUMMARY CARDS WITH HIGHER HEIGHT */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 max-w-[1300px] mx-auto">
         {summaryData.map((item) => (
           <div
             key={item.id}
-            className="bg-white shadow-md rounded-xl p-4 flex flex-col items-center text-center hover:shadow-lg transition"
+            className="
+              bg-white shadow-md rounded-xl 
+              p-4 flex flex-col items-center text-center 
+              hover:shadow-lg transition
+              h-[150px]          /* ⬅️ HEIGHT INCREASED */
+            "
           >
-            <div className="text-[24px]" style={{ color: item.color }}>
+            <div className="text-[28px]" style={{ color: item.color }}>
               {item.icon}
             </div>
-            <h3 className="text-[14px] text-gray-600">{item.title}</h3>
-            <p className="text-[16px] font-semibold">{item.value}</p>
+            <h3 className="text-[15px] text-gray-600 mt-2">{item.title}</h3>
+            <p className="text-[18px] font-semibold mt-1">{item.value}</p>
           </div>
         ))}
       </div>
@@ -175,10 +167,7 @@ const Payroll = () => {
                       <FaEye />
                     </button>
 
-                    <button
-                      onClick={() => handleEdit(emp.id)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
+                    <button className="text-blue-500 hover:text-blue-700">
                       <FaEdit />
                     </button>
 
@@ -196,7 +185,6 @@ const Payroll = () => {
         </div>
       </div>
 
-      {/* ⭐ SHOW SALARY SLIP POPUP HERE ⭐ */}
       {isSlipOpen && selectedSlip && (
         <SalarySlip slip={selectedSlip} onClose={() => setIsSlipOpen(false)} />
       )}

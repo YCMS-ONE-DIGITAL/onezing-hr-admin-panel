@@ -14,6 +14,7 @@ import {
   Megaphone,
   Award,
 } from "lucide-react";
+
 import {
   LineChart,
   Line,
@@ -25,7 +26,6 @@ import {
 } from "recharts";
 
 export default function DashboardCards() {
-
   const [chartType, setChartType] = useState("Daily");
 
   const chartData = {
@@ -72,15 +72,19 @@ export default function DashboardCards() {
   ];
 
   return (
-    <div className="w-full flex flex-col gap-10">
+    <div
+      className="
+        w-full flex flex-col gap-10
+        max-md:pt-12     /* ⭐ INCREASED TOP GAP FOR MOBILE */
+      "
+    >
 
       {/* =========================
-         TOP SECTION (CARDS + RIGHT PANEL)
+          TOP SECTION (CARDS + RIGHT PANEL)
       ========================== */}
-      <div className="flex gap-8 w-full">
+      <div className="flex gap-8 w-full max-md:flex-col">
 
-        {/* LEFT — CARDS GRID (compact cards) */}
-        <div className="flex-1 grid grid-cols-3 gap-4 max-xl:grid-cols-2">
+        <div className="flex-1 grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-md:grid-cols-2">
 
           {cards.map((card, i) => (
             <div
@@ -100,8 +104,10 @@ export default function DashboardCards() {
               </div>
 
               <div>
-                <p className="text-gray-500 text-xs">{card.title}</p>
-                <h3 className="text-[17px] font-semibold text-gray-800">
+                <p className="text-gray-800 font-bold text-[14px] tracking-wide">
+                  {card.title}
+                </p>
+                <h3 className="text-[18px] font-bold text-gray-900 mt-1">
                   {card.value}
                 </h3>
               </div>
@@ -110,12 +116,8 @@ export default function DashboardCards() {
 
         </div>
 
-        {/* ======================
-           RIGHT — LARGE PANEL
-        ====================== */}
-        <div className="w-[420px] flex flex-col gap-6">
+        <div className="w-[420px] flex flex-col gap-6 max-md:w-full">
 
-          {/* Top Performers */}
           <div className="bg-white border rounded-xl shadow p-6">
             <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
               <Award size={20} /> Top Performers
@@ -129,7 +131,6 @@ export default function DashboardCards() {
             ))}
           </div>
 
-          {/* Announcements */}
           <div className="bg-white border rounded-xl shadow p-6">
             <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
               <Megaphone size={20} /> Announcements
@@ -142,7 +143,6 @@ export default function DashboardCards() {
             ))}
           </div>
 
-          {/* Recent Activities */}
           <div className="bg-white border rounded-xl shadow p-6">
             <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
               <Bell size={20} /> Recent Activities
@@ -158,27 +158,29 @@ export default function DashboardCards() {
         </div>
       </div>
 
-      {/* =========================
-          FULL WIDTH GRAPH SECTION
-      ========================== */}
+      {/* =======================
+         PROJECT PERFORMANCE CHART
+      ======================= */}
       <div className="bg-white border rounded-xl shadow p-6 w-full">
-        <h2 className="text-xl font-semibold mb-4">Project Performance Analytics</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Project Performance Analytics
+        </h2>
 
         <div className="flex gap-3 mb-4">
-          {["Daily", "Monthly", "Yearly"].map((label) => (
+          {["Daily", "Monthly", "Yearly"].map((lbl) => (
             <button
-              key={label}
-              onClick={() => setChartType(label)}
+              key={lbl}
+              onClick={() => setChartType(lbl)}
               className={`
                 px-3 py-1 rounded-md text-sm border transition
                 ${
-                  chartType === label
+                  chartType === lbl
                     ? "bg-[#007bff] text-white"
                     : "bg-white text-gray-600 hover:bg-gray-200"
                 }
               `}
             >
-              {label}
+              {lbl}
             </button>
           ))}
         </div>
@@ -190,11 +192,19 @@ export default function DashboardCards() {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="performance" stroke="#007bff" strokeWidth={3} />
+              <Line
+                type="monotone"
+                dataKey="performance"
+                stroke="#007bff"
+                strokeWidth={3}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* ⭐ MORE BOTTOM SPACE FOR MOBILE */}
+      <div className="h-10 max-md:h-16"></div>
     </div>
   );
 }
