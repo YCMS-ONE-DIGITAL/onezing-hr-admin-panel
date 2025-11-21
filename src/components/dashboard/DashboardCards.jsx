@@ -72,42 +72,37 @@ export default function DashboardCards() {
   ];
 
   return (
-    <div
-      className="
-        w-full flex flex-col gap-10
-        max-md:pt-12     /* ⭐ INCREASED TOP GAP FOR MOBILE */
-      "
-    >
+    <div className="w-full flex flex-col gap-10 max-md:mt-4">
 
-      {/* =========================
-          TOP SECTION (CARDS + RIGHT PANEL)
-      ========================== */}
-      <div className="flex gap-8 w-full max-md:flex-col">
+      {/* MAIN TOP LAYOUT */}
+      <div className="flex w-full gap-6 max-md:flex-col">
 
-        <div className="flex-1 grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-md:grid-cols-2">
+        {/* LEFT GRID */}
+        <div className="flex-1 grid grid-cols-3 gap-x-4 gap-y-2 max-xl:grid-cols-2 max-md:grid-cols-2">
 
           {cards.map((card, i) => (
             <div
               key={i}
               className="
                 bg-white rounded-xl shadow 
-                p-3 flex items-center gap-3 
+                p-4 flex items-center gap-3 
                 border border-gray-200 
-                hover:shadow-lg transition
+                hover:shadow-md transition
+                h-[115px]
               "
             >
               <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-[18px]"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-[18px]"
                 style={{ color: card.color, backgroundColor: "#EEF1F8" }}
               >
                 {card.icon}
               </div>
 
               <div>
-                <p className="text-gray-800 font-bold text-[14px] tracking-wide">
+                <p className="text-gray-800 font-semibold text-[14px]">
                   {card.title}
                 </p>
-                <h3 className="text-[18px] font-bold text-gray-900 mt-1">
+                <h3 className="text-[20px] font-bold text-gray-900 mt-1">
                   {card.value}
                 </h3>
               </div>
@@ -116,10 +111,12 @@ export default function DashboardCards() {
 
         </div>
 
-        <div className="w-[420px] flex flex-col gap-6 max-md:w-full">
+        {/* RIGHT PANEL */}
+        <div className="w-[350px] flex flex-col gap-5 max-md:w-full">
 
-          <div className="bg-white border rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+          {/* Top Performers */}
+          <div className="bg-white border rounded-xl shadow p-5">
+            <h2 className="text-[18px] font-semibold flex items-center gap-2 mb-3">
               <Award size={20} /> Top Performers
             </h2>
 
@@ -131,36 +128,32 @@ export default function DashboardCards() {
             ))}
           </div>
 
-          <div className="bg-white border rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+          {/* Announcements */}
+          <div className="bg-white border rounded-xl shadow p-5">
+            <h2 className="text-[18px] font-semibold flex items-center gap-2 mb-3">
               <Megaphone size={20} /> Announcements
             </h2>
 
             {announcements.map((a, i) => (
-              <p key={i} className="border-b py-2 text-sm">
-                {a}
-              </p>
+              <p key={i} className="border-b py-2 text-sm">{a}</p>
             ))}
           </div>
 
-          <div className="bg-white border rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
+          {/* Recent Activities */}
+          <div className="bg-white border rounded-xl shadow p-5">
+            <h2 className="text-[18px] font-semibold flex items-center gap-2 mb-3">
               <Bell size={20} /> Recent Activities
             </h2>
 
             {activities.map((a, i) => (
-              <p key={i} className="border-b py-2 text-sm">
-                {a}
-              </p>
+              <p key={i} className="border-b py-2 text-sm">{a}</p>
             ))}
           </div>
 
         </div>
       </div>
 
-      {/* =======================
-         PROJECT PERFORMANCE CHART
-      ======================= */}
+      {/* PERFORMANCE CHART */}
       <div className="bg-white border rounded-xl shadow p-6 w-full">
         <h2 className="text-xl font-semibold mb-4">
           Project Performance Analytics
@@ -173,11 +166,7 @@ export default function DashboardCards() {
               onClick={() => setChartType(lbl)}
               className={`
                 px-3 py-1 rounded-md text-sm border transition
-                ${
-                  chartType === lbl
-                    ? "bg-[#007bff] text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-200"
-                }
+                ${chartType === lbl ? "bg-[#007bff] text-white" : "bg-white text-gray-600 hover:bg-gray-200"}
               `}
             >
               {lbl}
@@ -192,18 +181,12 @@ export default function DashboardCards() {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="performance"
-                stroke="#007bff"
-                strokeWidth={3}
-              />
+              <Line type="monotone" dataKey="performance" stroke="#007bff" strokeWidth={3} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* ⭐ MORE BOTTOM SPACE FOR MOBILE */}
       <div className="h-10 max-md:h-16"></div>
     </div>
   );

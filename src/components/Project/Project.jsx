@@ -31,7 +31,7 @@ export default function Project() {
     startDate: "",
     endDate: "",
     status: "Not Started",
-    progress: 0, // FIXED
+    progress: 0,
     priority: "Medium",
     summary: "",
     team: [],
@@ -41,14 +41,11 @@ export default function Project() {
   const [addMemberModal, setAddMemberModal] = useState(null);
   const [newMember, setNewMember] = useState({ name: "", role: "" });
 
-  // Handle Add/Edit Project form changes
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // OPEN Add Project Modal
   const openModal = () => setIsModalOpen(true);
 
-  // CLOSE Add Project
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
@@ -58,14 +55,13 @@ export default function Project() {
       startDate: "",
       endDate: "",
       status: "Not Started",
-      progress: 0, // FIXED
+      progress: 0,
       priority: "Medium",
       summary: "",
       team: [],
     });
   };
 
-  // ADD or UPDATE PROJECT
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -76,8 +72,8 @@ export default function Project() {
 
     const formattedData = {
       ...formData,
-      progress: Number(formData.progress) || 0, // FIXED
-      team: formData.team || [], // FIXED
+      progress: Number(formData.progress) || 0,
+      team: formData.team || [],
     };
 
     if (editingId) {
@@ -96,7 +92,6 @@ export default function Project() {
     closeModal();
   };
 
-  // EDIT PROJECT
   const handleEdit = (id) => {
     const proj = projects.find((p) => p.id === id);
     setFormData({
@@ -114,7 +109,6 @@ export default function Project() {
     setIsModalOpen(true);
   };
 
-  // DELETE PROJECT
   const handleDelete = (id) => {
     if (window.confirm("Are you sure?")) {
       setProjects(projects.filter((p) => p.id !== id));
@@ -122,23 +116,19 @@ export default function Project() {
     }
   };
 
-  // OPEN Summary Panel
   const openSummary = (project) => setSummaryProject(project);
 
-  // CLOSE Summary
   const closeSummary = () => {
     setSummaryProject(null);
     setEditInfo(null);
     setAddMemberModal(null);
   };
 
-  // OPEN Edit Info inside summary
   const openEditInfo = (project) => setEditInfo({ ...project });
 
   const handleEditInfoChange = (e) =>
     setEditInfo({ ...editInfo, [e.target.name]: e.target.value });
 
-  // SAVE Edit Info
   const handleUpdateInfo = (e) => {
     e.preventDefault();
 
@@ -157,7 +147,6 @@ export default function Project() {
 
   const cancelEditInfo = () => setEditInfo(null);
 
-  // ADD TEAM MEMBER
   const openAddMember = (id) => {
     setAddMemberModal(id);
     setNewMember({ name: "", role: "" });
@@ -189,7 +178,6 @@ export default function Project() {
 
   const cancelAddMember = () => setAddMemberModal(null);
 
-  // REMOVE MEMBER
   const handleRemoveMember = (projectId, index) => {
     setProjects((prev) =>
       prev.map((p) =>
@@ -220,7 +208,7 @@ export default function Project() {
       </h1>
 
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-4 max-w-[1200px] mx-auto">
+      <div className="flex justify-between items-center mb-4 max-w-[1100px] mx-auto">
         <h2 className="text-[18px] font-semibold">All Projects</h2>
         <button
           onClick={openModal}
@@ -231,8 +219,8 @@ export default function Project() {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white max-w-[1200px] mx-auto rounded-xl shadow-md overflow-hidden">
-        <table className="w-full min-w-[900px]">
+      <div className="bg-white max-w-[1100px] mx-auto rounded-xl shadow-md overflow-hidden">
+        <table className="w-full min-w-[850px]">
           <thead className="bg-blue-500 text-white">
             <tr>
               <th className="py-3 px-4">Name</th>
@@ -299,9 +287,8 @@ export default function Project() {
       {/* SUMMARY MODAL */}
       {summaryProject && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-6 z-[999]">
-          <div className="bg-white w-full max-w-6xl max-h-[85vh] overflow-y-auto rounded-2xl shadow-2xl p-12 relative">
+          <div className="bg-white w-full max-w-6xl max-height-[85vh] overflow-y-auto rounded-2xl shadow-2xl p-12 relative">
 
-            {/* close */}
             <button
               className="absolute top-6 right-6 text-xl"
               onClick={closeSummary}
@@ -309,7 +296,6 @@ export default function Project() {
               ✖
             </button>
 
-            {/* EDIT INFO */}
             <button
               onClick={() => openEditInfo(summaryProject)}
               className="absolute top-6 left-6 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl"
@@ -318,6 +304,7 @@ export default function Project() {
             </button>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-10">
+              
               {/* LEFT SIDE */}
               <div className="lg:col-span-2 space-y-10">
                 <div className="bg-white p-8 rounded-2xl border shadow-md">
@@ -373,6 +360,7 @@ export default function Project() {
                     </div>
                   ))}
                 </div>
+
               </div>
             </div>
 
@@ -533,7 +521,6 @@ export default function Project() {
 
             <form onSubmit={handleSubmit} className="space-y-3">
 
-              {/* NAME */}
               <input
                 type="text"
                 name="name"
@@ -543,7 +530,6 @@ export default function Project() {
                 className="w-full border p-2 rounded"
               />
 
-              {/* MANAGER */}
               <input
                 type="text"
                 name="manager"
@@ -553,7 +539,6 @@ export default function Project() {
                 className="w-full border p-2 rounded"
               />
 
-              {/* DATES */}
               <div className="flex gap-3">
                 <input
                   type="date"
@@ -571,7 +556,6 @@ export default function Project() {
                 />
               </div>
 
-              {/* PRIORITY */}
               <select
                 name="priority"
                 value={formData.priority}
@@ -583,7 +567,6 @@ export default function Project() {
                 <option>Low</option>
               </select>
 
-              {/* STATUS */}
               <select
                 name="status"
                 value={formData.status}
@@ -595,7 +578,6 @@ export default function Project() {
                 <option>Completed</option>
               </select>
 
-              {/* PROGRESS */}
               <input
                 type="number"
                 min="0"
@@ -607,7 +589,6 @@ export default function Project() {
                 className="w-full border p-2 rounded"
               />
 
-              {/* SUMMARY */}
               <textarea
                 name="summary"
                 placeholder="Summary"

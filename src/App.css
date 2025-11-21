@@ -7,3 +7,45 @@ body {
 .App {
   text-align: center;
 }
+
+/* 🌙 Dark Mode Global Classes */
+
+.dark-mode {
+  background-color: #1a1a1a !important;
+  color: #f5f5f5 !important;
+}
+
+/* All cards become dark */
+.dark-mode .card,
+.dark-mode .bg-white {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* Inputs */
+.dark-mode input,
+.dark-mode select {
+  background-color: #333 !important;
+  border-color: #555 !important;
+  color: #fff !important;
+}
+
+/* Sidebar */
+.dark-mode .sidebar-dark {
+  background-color: #222 !important;
+  color: #fff !important;
+}
+
+/* Table heading + rows */
+.dark-mode table thead tr {
+  background-color: #333 !important;
+}
+
+.dark-mode table tbody tr {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+}
+
+.dark-mode table tbody tr:hover {
+  background-color: #3a3a3a !important;
+}

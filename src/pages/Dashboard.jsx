@@ -6,8 +6,8 @@ export default function Dashboard() {
     <div
       className="
         absolute
-        top-[110px]
-        left-[280px]
+        top-[94px]
+        left-[260px]
         right-0
         bottom-0
         bg-[#f4f6f9]
@@ -15,11 +15,11 @@ export default function Dashboard() {
         overflow-y-auto
         transition-all
 
-        /* ⭐ MOBILE FIX */
+        /* ⭐ ONLY MOBILE CHANGES */
         max-md:left-0 
         max-md:top-[70px] 
-        max-md:px-4 
-        max-md:py-4
+        max-md:px-3 
+        max-md:py-3
       "
     >
       <DashboardCards />

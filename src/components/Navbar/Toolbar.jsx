@@ -6,27 +6,29 @@ const Toolbar = ({ toggleSidebar }) => {
     <div
       className="
         fixed 
-        top-[60px] 
+        top-[50px]      /* Navbar खाली exact बसतो */
         left-0 
         w-full 
-        h-[50px] 
+        h-[44px]        /* ⭐ SLIM HEIGHT */
         bg-[#f9f9f9]
         flex 
         items-center 
         justify-between 
-        px-5 
+        px-4 
         z-[999] 
         shadow-sm 
-        border-b border-gray-300
+        border-b 
+        border-gray-300
       "
     >
-      <div className="flex items-center gap-3 md:gap-4">
+      {/* LEFT SIDE */}
+      <div className="flex items-center gap-2 md:gap-3">
         <button
           onClick={toggleSidebar}
           className="
             text-gray-800 
-            text-[22px] 
-            md:text-[24px] 
+            text-[18px]      /* ⭐ Icon smaller */
+            md:text-[20px] 
             hover:text-blue-600 
             transition-all 
             duration-200 
@@ -41,8 +43,8 @@ const Toolbar = ({ toggleSidebar }) => {
             text-gray-700 
             font-semibold 
             tracking-wide 
-            text-sm 
-            md:text-base 
+            text-xs        /* ⭐ Text smaller */
+            md:text-sm 
             whitespace-nowrap
           "
         >
@@ -50,12 +52,27 @@ const Toolbar = ({ toggleSidebar }) => {
         </h2>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full text-gray-500 text-sm font-semibold">
+      {/* RIGHT SIDE */}
+      <div className="flex items-center gap-3">
+        <div className="
+          hidden md:flex 
+          items-center justify-center 
+          w-7 h-7            /* ⭐ Smaller circle */
+          bg-gray-200 
+          rounded-full 
+          text-gray-500 
+          text-xs 
+          font-semibold
+        ">
           A
         </div>
 
-        <span className="hidden md:block text-sm text-gray-600 font-medium">
+        <span className="
+          hidden md:block 
+          text-xs          /* ⭐ Smaller text */
+          text-gray-600 
+          font-medium
+        ">
           Admin
         </span>
       </div>
