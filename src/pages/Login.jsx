@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // ✅ Link import केलं
+import { useNavigate, Link } from "react-router-dom"; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === "demo@example.com" && password === "password123") {
+    if (email === "demo@example.com" && password === "123") {
       alert("✅ Login Successful");
       navigate("/dashboard");
     } else {

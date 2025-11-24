@@ -16,12 +16,12 @@ export default function EmployeeCards() {
       {/* ⭐ MAIN WRAPPER — Laptop perfect + mobile scroll fix */}
       <div
         className="
-          max-w-[1100px]
+          max-w-[1130px]
           w-full
           mx-auto
           px-3
           py-4
-          ml-0 md:ml-[230px]
+          ml-0 md:ml-[210px]
           mt-[15px]
           transition-all
 

@@ -1,618 +1,483 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+const initialProjects = [
+  {
+    id: 1,
+    name: "Employee Management System",
+    manager: "Ravi Patil",
+    startDate: "2025-01-10",
+    endDate: "2025-04-15",
+    status: "Ongoing",
+    progress: 60,
+    priority: "High",
+    category: "HR",
+    summary:
+      "This project covers employee attendance, leave management, and payroll automation.",
+    team: [
+      { name: "Harshal Mali", role: "Frontend Dev" },
+      { name: "Sneha Kulkarni", role: "Backend Dev" },
+      { name: "Amit Jadhav", role: "QA Engineer" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Clinic Management System",
+    manager: "Dr. Neha Joshi",
+    startDate: "2025-02-01",
+    endDate: "2025-05-30",
+    status: "Ongoing",
+    progress: 45,
+    priority: "High",
+    category: "Healthcare",
+    summary:
+      "Streamlines patient records, appointments, billing and basic inventory for small clinics.",
+    team: [
+      { name: "Rohan Kulkarni", role: "Full Stack Dev" },
+      { name: "Priya Shah", role: "UI/UX Designer" },
+      { name: "Sagar More", role: "QA Engineer" },
+    ],
+  },
+];
 
 export default function Project() {
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      name: "Employee Management System",
-      manager: "Ravi Patil",
-      startDate: "2025-01-10",
-      endDate: "2025-04-15",
-      status: "Ongoing",
-      progress: 60,
-      priority: "High",
-      summary: "This project covers employee attendance, leaves & payroll.",
-      team: [
-        { name: "Harshal Mali", role: "Frontend Dev" },
-        { name: "Sneha Kulkarni", role: "Backend Dev" },
-        { name: "Amit Jadhav", role: "QA Engineer" },
-      ],
-    },
-  ]);
+  const navigate = useNavigate();
+
+  const [projects, setProjects] = useState(() => {
+    const saved = localStorage.getItem("projects");
+    return saved ? JSON.parse(saved) : initialProjects;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("projects", JSON.stringify(projects));
+  }, [projects]);
+
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [summaryProject, setSummaryProject] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const emptyProject = {
     name: "",
     manager: "",
     startDate: "",
     endDate: "",
     status: "Not Started",
-    progress: 0,
     priority: "Medium",
-    summary: "",
+    category: "",
+    progress: 0,
     team: [],
-  });
+    summary: "",
+  };
 
-  const [editInfo, setEditInfo] = useState(null);
-  const [addMemberModal, setAddMemberModal] = useState(null);
-  const [newMember, setNewMember] = useState({ name: "", role: "" });
+  const [form, setForm] = useState(emptyProject);
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // TEAM INPUT STATE
+  const [member, setMember] = useState({ name: "", role: "" });
 
-  const openModal = () => setIsModalOpen(true);
+  const addTeamMember = () => {
+    if (!member.name.trim() || !member.role.trim()) {
+      alert("Enter employee name & role");
+      return;
+    }
+
+    setForm({
+      ...form,
+      team: [...form.team, member],
+    });
+
+    setMember({ name: "", role: "" });
+  };
+
+  const removeTeamMember = (index) => {
+    setForm({
+      ...form,
+      team: form.team.filter((_, i) => i !== index),
+    });
+  };
+
+  const statusColors = {
+    "Not Started": "bg-gray-200 text-gray-700",
+    Ongoing: "bg-yellow-200 text-yellow-800",
+    Completed: "bg-green-200 text-green-700",
+  };
+
+  const priorityColors = {
+    High: "text-red-600",
+    Medium: "text-orange-500",
+    Low: "text-green-600",
+  };
+
+  const categoryColors = {
+    HR: "bg-purple-50 text-purple-700 border border-purple-200",
+    Healthcare: "bg-rose-50 text-rose-700 border border-rose-200",
+    Education: "bg-blue-50 text-blue-700 border border-blue-200",
+    Travel: "bg-orange-50 text-orange-700 border border-orange-200",
+    Retail: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    Default: "bg-gray-100 text-gray-700 border border-gray-200",
+  };
+
+  const filtered = useMemo(() => {
+    return projects
+      .filter((p) =>
+        p.name.toLowerCase().includes(search.toLowerCase().trim())
+      )
+      .filter((p) =>
+        filterStatus === "All" ? true : p.status === filterStatus
+      );
+  }, [projects, search, filterStatus]);
+
+  const openAddModal = () => {
+    setEditingId(null);
+    setForm(emptyProject);
+    setMember({ name: "", role: "" });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (project) => {
+    setEditingId(project.id);
+    setForm(project);
+    setMember({ name: "", role: "" });
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
-    setFormData({
-      name: "",
-      manager: "",
-      startDate: "",
-      endDate: "",
-      status: "Not Started",
-      progress: 0,
-      priority: "Medium",
-      summary: "",
-      team: [],
-    });
+    setForm(emptyProject);
+  };
+
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.manager) {
-      alert("Please fill required fields");
+    if (!form.name || !form.manager) {
+      alert("Please fill Project Name & Manager");
       return;
     }
-
-    const formattedData = {
-      ...formData,
-      progress: Number(formData.progress) || 0,
-      team: formData.team || [],
-    };
 
     if (editingId) {
       setProjects((prev) =>
         prev.map((p) =>
-          p.id === editingId ? { ...formattedData, id: editingId } : p
+          p.id === editingId ? { ...form, id: editingId } : p
         )
       );
     } else {
+      const newId = Date.now();
       setProjects((prev) => [
         ...prev,
-        { ...formattedData, id: Date.now() },
+        { ...form, id: newId },
       ]);
     }
 
     closeModal();
   };
 
-  const handleEdit = (id) => {
-    const proj = projects.find((p) => p.id === id);
-    setFormData({
-      name: proj.name,
-      manager: proj.manager,
-      startDate: proj.startDate,
-      endDate: proj.endDate,
-      status: proj.status,
-      progress: proj.progress,
-      priority: proj.priority,
-      summary: proj.summary,
-      team: proj.team,
-    });
-    setEditingId(id);
-    setIsModalOpen(true);
-  };
-
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure?")) {
-      setProjects(projects.filter((p) => p.id !== id));
-      if (summaryProject?.id === id) setSummaryProject(null);
-    }
-  };
-
-  const openSummary = (project) => setSummaryProject(project);
-
-  const closeSummary = () => {
-    setSummaryProject(null);
-    setEditInfo(null);
-    setAddMemberModal(null);
-  };
-
-  const openEditInfo = (project) => setEditInfo({ ...project });
-
-  const handleEditInfoChange = (e) =>
-    setEditInfo({ ...editInfo, [e.target.name]: e.target.value });
-
-  const handleUpdateInfo = (e) => {
-    e.preventDefault();
-
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === editInfo.id ? { ...editInfo } : p
-      )
-    );
-
-    if (summaryProject?.id === editInfo.id) {
-      setSummaryProject({ ...editInfo });
-    }
-
-    setEditInfo(null);
-  };
-
-  const cancelEditInfo = () => setEditInfo(null);
-
-  const openAddMember = (id) => {
-    setAddMemberModal(id);
-    setNewMember({ name: "", role: "" });
-  };
-
-  const handleNewMemberChange = (e) =>
-    setNewMember({ ...newMember, [e.target.name]: e.target.value });
-
-  const handleAddMember = (e) => {
-    e.preventDefault();
-
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === addMemberModal
-          ? { ...p, team: [...p.team, newMember] }
-          : p
-      )
-    );
-
-    if (summaryProject?.id === addMemberModal) {
-      setSummaryProject((prev) => ({
-        ...prev,
-        team: [...prev.team, newMember],
-      }));
-    }
-
-    setAddMemberModal(null);
-  };
-
-  const cancelAddMember = () => setAddMemberModal(null);
-
-  const handleRemoveMember = (projectId, index) => {
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === projectId
-          ? { ...p, team: p.team.filter((_, i) => i !== index) }
-          : p
-      )
-    );
-
-    if (summaryProject?.id === projectId) {
-      setSummaryProject((prev) => ({
-        ...prev,
-        team: prev.team.filter((_, i) => i !== index),
-      }));
-    }
+    if (!window.confirm("Delete this project?")) return;
+    setProjects((prev) => prev.filter((p) => p.id !== id));
   };
 
   return (
-    <div
-      className="
-      absolute top-[120px] left-[260px] right-0 bottom-0
-      bg-[#f7f8fc] p-8 overflow-y-auto font-[Poppins]
-      max-md:left-0 max-md:top-[60px]
-    "
-    >
+    <div className="absolute top-[95px] left-[260px] right-0 bottom-0 bg-[#f7f8fc] p-8 overflow-y-auto font-[Poppins]">
+
       <h1 className="text-center text-[28px] font-semibold mb-6">
         Project Management
       </h1>
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-4 max-w-[1100px] mx-auto">
-        <h2 className="text-[18px] font-semibold">All Projects</h2>
+      <div className="flex justify-between items-center mb-6 max-w-[1200px] mx-auto">
+        <h2 className="text-[20px] font-semibold">All Projects</h2>
+
         <button
-          onClick={openModal}
-          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md shadow-md"
+          onClick={openAddModal}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md"
         >
           <FaPlus /> Add Project
         </button>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white max-w-[1100px] mx-auto rounded-xl shadow-md overflow-hidden">
-        <table className="w-full min-w-[850px]">
-          <thead className="bg-blue-500 text-white">
-            <tr>
-              <th className="py-3 px-4">Name</th>
-              <th className="py-3 px-4">Manager</th>
-              <th className="py-3 px-4">Start</th>
-              <th className="py-3 px-4">End</th>
-              <th className="py-3 px-4">Progress</th>
-              <th className="py-3 px-4">Priority</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4 text-center">Actions</th>
-            </tr>
-          </thead>
+      <div className="max-w-[1200px] mx-auto mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Search projects..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-3 rounded-lg shadow-sm bg-white"
+        />
 
-          <tbody>
-            {projects.map((p) => (
-              <tr key={p.id} className="border-b hover:bg-blue-50">
-                <td
-                  className="py-3 px-4 text-blue-600 underline cursor-pointer"
-                  onClick={() => openSummary(p)}
-                >
-                  {p.name}
-                </td>
-                <td className="py-3 px-4">{p.manager}</td>
-                <td className="py-3 px-4">{p.startDate}</td>
-                <td className="py-3 px-4">{p.endDate}</td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-full bg-gray-200 rounded-full h-[8px] overflow-hidden">
-                      <div
-                        className="bg-blue-500 h-full"
-                        style={{ width: `${p.progress}%` }}
-                      ></div>
-                    </div>
-                    <span>{p.progress}%</span>
-                  </div>
-                </td>
+        <select
+          className="border p-3 rounded-lg shadow-sm bg-white"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option>All</option>
+          <option>Not Started</option>
+          <option>Ongoing</option>
+          <option>Completed</option>
+        </select>
 
-                <td className="py-3 px-4">{p.priority}</td>
-                <td className="py-3 px-4">{p.status}</td>
-
-                <td className="py-3 px-4 text-center">
-                  <div className="flex justify-center gap-4">
-                    <button
-                      className="text-blue-600"
-                      onClick={() => handleEdit(p.id)}
-                    >
-                      <FaEdit />
-                    </button>
-
-                    <button
-                      className="text-red-600"
-                      onClick={() => handleDelete(p.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div />
       </div>
 
-      {/* SUMMARY MODAL */}
-      {summaryProject && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-6 z-[999]">
-          <div className="bg-white w-full max-w-6xl max-height-[85vh] overflow-y-auto rounded-2xl shadow-2xl p-12 relative">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
+        {filtered.map((p) => {
+          const categoryClass =
+            categoryColors[p.category] || categoryColors.Default;
 
-            <button
-              className="absolute top-6 right-6 text-xl"
-              onClick={closeSummary}
+          return (
+            <div
+              key={p.id}
+              onClick={() => navigate(`/project/${p.id}`)}
+              className="bg-white p-6 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] transition cursor-pointer"
             >
-              ✖
-            </button>
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-[20px] font-semibold text-gray-800 leading-tight">
+                  {p.name}
+                </h3>
 
-            <button
-              onClick={() => openEditInfo(summaryProject)}
-              className="absolute top-6 left-6 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl"
-            >
-              Edit Info
-            </button>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-10">
-              
-              {/* LEFT SIDE */}
-              <div className="lg:col-span-2 space-y-10">
-                <div className="bg-white p-8 rounded-2xl border shadow-md">
-                  <h1 className="text-4xl font-bold">
-                    {summaryProject.name}
-                  </h1>
-                  <p className="text-gray-600 mt-2">
-                    <b>Start:</b> {summaryProject.startDate} |{" "}
-                    <b>Deadline:</b> {summaryProject.endDate}
-                  </p>
-                </div>
-
-                <div className="bg-white p-8 rounded-2xl border shadow-md">
-                  <h2 className="text-3xl font-semibold mb-4">Summary</h2>
-                  <p className="text-gray-700">{summaryProject.summary}</p>
-                </div>
-              </div>
-
-              {/* RIGHT SIDE */}
-              <div className="bg-white p-8 rounded-2xl border shadow-md">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-3xl font-semibold">Assigned Team</h2>
+                <div className="flex gap-3 text-[18px] text-gray-500">
+                  <button
+                    className="hover:text-blue-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openEditModal(p);
+                    }}
+                  >
+                    <FaEdit />
+                  </button>
 
                   <button
-                    onClick={() => openAddMember(summaryProject.id)}
-                    className="px-3 py-1 bg-green-100 text-green-700 rounded-md"
+                    className="hover:text-red-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(p.id);
+                    }}
                   >
-                    + Add
+                    <FaTrash />
                   </button>
                 </div>
+              </div>
 
-                <div className="mt-5 space-y-4">
-                  {summaryProject.team.map((m, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between bg-gray-50 hover:bg-gray-100 p-3 rounded-xl"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-full bg-gray-300 overflow-hidden"></div>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                {p.category && (
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${categoryClass}`}
+                  >
+                    {p.category}
+                  </span>
+                )}
 
-                        <div>
-                          <p className="font-semibold">{m.name}</p>
-                          <p className="text-gray-600 text-sm">{m.role}</p>
-                        </div>
-                      </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[p.status]}`}
+                >
+                  {p.status}
+                </span>
+              </div>
 
-                      <button
-                        onClick={() => handleRemoveMember(summaryProject.id, i)}
-                        className="text-red-600 text-xl"
-                      >
-                        ✖
-                      </button>
-                    </div>
-                  ))}
-                </div>
+              <p className="text-gray-500 text-sm mt-2 line-clamp-2">
+                {p.summary}
+              </p>
 
+              <div className="flex justify-between mt-4 text-sm text-gray-700">
+                <p><b>Manager:</b> {p.manager}</p>
+                <p className={`${priorityColors[p.priority]} font-semibold`}>
+                  {p.priority}
+                </p>
+              </div>
+
+              <div className="flex justify-between text-sm text-gray-700 mt-2">
+                <p><b>Start:</b> {p.startDate}</p>
+                <p><b>End:</b> {p.endDate}</p>
               </div>
             </div>
+          );
+        })}
+      </div>
 
-          </div>
-        </div>
-      )}
+      {/* MODAL */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-start justify-center pt-20 p-4 z-[999]">
 
-      {/* EDIT INFO MODAL */}
-      {editInfo && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-6 z-[1000]">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full relative">
+          <div className="bg-white rounded-xl shadow-[0_6px_16px_rgba(0,0,0,0.12)] p-6 w-full max-w-2xl max-h-[88vh] overflow-y-auto">
 
-            <button
-              className="absolute top-4 right-5"
-              onClick={cancelEditInfo}
-            >
-              ✖
-            </button>
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-xl font-semibold text-gray-800">
+                {editingId ? "Edit Project" : "Add Project"}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-red-500 text-xl transition"
+              >
+                ✖
+              </button>
+            </div>
 
-            <h3 className="text-xl font-semibold mb-4">
-              Edit Project Information
-            </h3>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            <form onSubmit={handleUpdateInfo} className="space-y-3">
-
-              <input
-                name="name"
-                value={editInfo.name}
-                onChange={handleEditInfoChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <input
-                name="manager"
-                value={editInfo.manager}
-                onChange={handleEditInfoChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <div className="flex gap-3">
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Project Name</label>
                 <input
-                  type="date"
+                  name="name"
+                  type="text"
+                  placeholder="Enter project name"
+                  value={form.name}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Manager</label>
+                <input
+                  name="manager"
+                  type="text"
+                  placeholder="Project manager"
+                  value={form.manager}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Start Date</label>
+                <input
                   name="startDate"
-                  value={editInfo.startDate}
-                  onChange={handleEditInfoChange}
-                  className="w-full border p-2 rounded"
+                  type="date"
+                  value={form.startDate}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
                 />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">End Date</label>
+                <input
+                  name="endDate"
+                  type="date"
+                  value={form.endDate}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Status</label>
+                <select
+                  name="status"
+                  value={form.status}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                >
+                  <option>Not Started</option>
+                  <option>Ongoing</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Priority</label>
+                <select
+                  name="priority"
+                  value={form.priority}
+                  onChange={handleFormChange}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                >
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+
+              {/* SUMMARY */}
+              <div className="md:col-span-2 flex flex-col">
+                <label className="text-gray-700 mb-1 font-medium">Summary</label>
+                <textarea
+                  name="summary"
+                  placeholder="Enter summary"
+                  value={form.summary}
+                  onChange={handleFormChange}
+                  rows={3}
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
+                ></textarea>
+              </div>
+
+              {/* TEAM SECTION */}
+              <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-3">
 
                 <input
-                  type="date"
-                  name="endDate"
-                  value={editInfo.endDate}
-                  onChange={handleEditInfoChange}
-                  className="w-full border p-2 rounded"
+                  type="text"
+                  placeholder="Employee Name"
+                  value={member.name}
+                  onChange={(e) =>
+                    setMember({ ...member, name: e.target.value })
+                  }
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
                 />
-              </div>
 
-              <textarea
-                name="summary"
-                rows={4}
-                value={editInfo.summary}
-                onChange={handleEditInfoChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={cancelEditInfo}
-                  type="button"
-                  className="px-4 py-2 border rounded"
+                <select
+                  value={member.role}
+                  onChange={(e) =>
+                    setMember({ ...member, role: e.target.value })
+                  }
+                  className="p-3 rounded-lg border border-gray-300 bg-gray-50"
                 >
-                  Cancel
-                </button>
+                  <option value="">Select Role</option>
+                  <option>Frontend Dev</option>
+                  <option>Backend Dev</option>
+                  <option>Full Stack Dev</option>
+                  <option>UI/UX Designer</option>
+                  <option>QA Engineer</option>
+                  <option>Tester</option>
+                  <option>Manager</option>
+                </select>
 
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                  Save
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ADD MEMBER MODAL */}
-      {addMemberModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-6 z-[1000]">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full relative">
-
-            <button
-              className="absolute top-4 right-5"
-              onClick={cancelAddMember}
-            >
-              ✖
-            </button>
-
-            <h3 className="text-lg font-semibold mb-4">
-              Add Team Member
-            </h3>
-
-            <form onSubmit={handleAddMember} className="space-y-3">
-              <input
-                name="name"
-                placeholder="Name"
-                value={newMember.name}
-                onChange={handleNewMemberChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <input
-                name="role"
-                placeholder="Role"
-                value={newMember.role}
-                onChange={handleNewMemberChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <div className="flex justify-end gap-3 mt-3">
                 <button
                   type="button"
-                  onClick={cancelAddMember}
-                  className="px-4 py-2 border rounded"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded"
+                  onClick={addTeamMember}
+                  className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700"
                 >
                   Add
                 </button>
               </div>
 
-            </form>
-          </div>
-        </div>
-      )}
+              {/* TEAM LIST */}
+              {form.team.length > 0 && (
+                <div className="md:col-span-2 mt-3 space-y-2">
+                  {form.team.map((m, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center border p-2 rounded-lg bg-gray-50"
+                    >
+                      <p>
+                        <b>{m.name}</b> — {m.role}
+                      </p>
 
-      {/* ADD/EDIT PROJECT MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center p-6 z-[999]">
-          <div className="bg-white rounded-xl p-6 max-w-lg w-full relative">
+                      <button
+                        type="button"
+                        onClick={() => removeTeamMember(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-            <button
-              className="absolute top-4 right-5"
-              onClick={closeModal}
-            >
-              ✖
-            </button>
-
-            <h2 className="text-xl font-semibold text-center mb-4">
-              {editingId ? "Edit Project" : "Add Project"}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-3">
-
-              <input
-                type="text"
-                name="name"
-                placeholder="Project name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <input
-                type="text"
-                name="manager"
-                placeholder="Manager"
-                value={formData.manager}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <div className="flex gap-3">
-                <input
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                />
-                <input
-                  type="date"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                />
-              </div>
-
-              <select
-                name="priority"
-                value={formData.priority}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
-              </select>
-
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                <option>Not Started</option>
-                <option>Ongoing</option>
-                <option>Completed</option>
-              </select>
-
-              <input
-                type="number"
-                min="0"
-                max="100"
-                name="progress"
-                placeholder="Progress (%)"
-                value={formData.progress}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <textarea
-                name="summary"
-                placeholder="Summary"
-                rows={3}
-                value={formData.summary}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              />
-
-              <div className="flex justify-end gap-3 mt-4">
-
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 border rounded"
-                >
-                  Cancel
-                </button>
-
+              {/* SUBMIT */}
+              <div className="md:col-span-2">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow transition"
                 >
-                  {editingId ? "Update" : "Add"}
+                  {editingId ? "Update Project" : "Add Project"}
                 </button>
               </div>
 

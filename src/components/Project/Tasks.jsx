@@ -1,239 +1,279 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Tasks() {
-  const [tasks, setTasks] = useState([]);
+  // ---------------- LOAD PROJECTS FROM LOCAL STORAGE ----------------
+  const projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+  // ---------------- TASKS LOCAL STORAGE ----------------
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem("tasks");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // ---------------- MODAL STATE ----------------
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
-  const [taskData, setTaskData] = useState({
+  const [editingId, setEditingId] = useState(null);
+
+  const emptyForm = {
+    projectId: "",
     name: "",
     description: "",
     priority: "Medium",
     assignedTo: "",
-  });
-
-  const handleChange = (e) =>
-    setTaskData({ ...taskData, [e.target.name]: e.target.value });
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingTask(null);
-    setTaskData({
-      name: "",
-      description: "",
-      priority: "Medium",
-      assignedTo: "",
-    });
   };
 
+  const [form, setForm] = useState(emptyForm);
+
+  // ---------------- FORM EVENTS ----------------
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  // team safely load करा
+  const selectedProject = useMemo(() => {
+    return projects.find((p) => p.id === Number(form.projectId));
+  }, [form.projectId, projects]);
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!taskData.name.trim() || !taskData.assignedTo.trim()) {
-      alert("Please enter task name and assignee");
-      return;
-    }
 
-    if (editingTask) {
-      setTasks(
-        tasks.map((t) =>
-          t.id === editingTask ? { ...taskData, id: t.id } : t
-        )
-      );
+    if (!form.projectId) return alert("Select project!");
+    if (!form.name.trim()) return alert("Task name required!");
+    if (!form.assignedTo.trim())
+      return alert("Select employee for this task!");
+
+    const newTask = { ...form, id: editingId || Date.now() };
+
+    if (editingId) {
+      setTasks((prev) => prev.map((t) => (t.id === editingId ? newTask : t)));
     } else {
-      setTasks([...tasks, { ...taskData, id: Date.now() }]);
+      setTasks((prev) => [...prev, newTask]);
     }
 
     closeModal();
   };
 
-  const handleEdit = (id) => {
-    const editData = tasks.find((t) => t.id === id);
-    setTaskData(editData);
-    setEditingTask(id);
-    setIsModalOpen(true);
+  // ---------------- MODAL OPEN / CLOSE ----------------
+  const openModal = () => setIsModalOpen(true);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setForm(emptyForm);
   };
 
+  // ---------------- EDIT ----------------
+  const handleEdit = (task) => {
+    setForm(task);
+    setEditingId(task.id);
+    openModal();
+  };
+
+  // ---------------- DELETE ----------------
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      setTasks(tasks.filter((t) => t.id !== id));
-    }
+    if (!window.confirm("Delete this task?")) return;
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
+  // -----------------------------------------------------
+  // UI STARTS HERE (UNCHANGED)
+  // -----------------------------------------------------
   return (
     <div
       className="
         absolute top-[115px] left-[250px] right-0 bottom-0 bg-[#f8f9fb]
-        flex flex-col items-center p-8 gap-8 overflow-y-auto
-        font-[Poppins]
-        max-md:relative max-md:left-0 max-md:top-[40px] max-md:p-4
+        p-8 overflow-y-auto font-[Poppins]
+        max-md:left-0 max-md:top-[60px] max-md:p-4
       "
     >
-      {/* === Page Title === */}
-      <h1 className="text-center text-[#222] font-semibold text-[28px] md:text-[32px]">
+      {/* PAGE TITLE */}
+      <h1 className="text-center text-[28px] md:text-[32px] font-semibold text-gray-800 mb-6">
         Task Management
       </h1>
 
-      {/* === Header Section === */}
-      <div className="flex justify-between items-center w-[95%] md:w-[90%] max-w-[1300px] mb-4">
-        <h2 className="text-[18px] font-semibold text-gray-700">
-          Employee Tasks
-        </h2>
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-5 w-[95%] md:w-[90%] max-w-[1300px] mx-auto">
+        <h2 className="text-[18px] font-semibold text-gray-700">All Tasks</h2>
+
         <button
           onClick={openModal}
-          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md shadow-md text-sm font-medium transition"
+          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md shadow-md text-sm"
         >
-          <FaPlus className="text-[13px]" /> Add Task
+          <FaPlus /> Add Task
         </button>
       </div>
 
-      {/* === Table Section (Laptop width same as Payroll/Attendance) === */}
+      {/* TASK TABLE */}
       <div
         className="
-          bg-white rounded-xl shadow-md p-4 md:p-6 w-[95%] md:w-[90%] max-w-[1300px]
-          overflow-x-auto h-[420px] max-md:h-auto max-md:overflow-x-auto transition-all duration-300
+          bg-white shadow-md rounded-xl w-[95%] md:w-[90%] max-w-[1300px]
+          mx-auto overflow-x-auto border border-gray-300
         "
       >
-        <div className="min-w-[800px] w-full">
-          <table className="w-full border-collapse text-[13px] md:text-[15px] text-center">
-            <thead>
-              <tr className="bg-[#f1f3f6] text-gray-800 font-semibold">
-                <th className="border border-gray-200 py-3 px-4">Name</th>
-                <th className="border border-gray-200 py-3 px-4">Description</th>
-                <th className="border border-gray-200 py-3 px-4">Priority</th>
-                <th className="border border-gray-200 py-3 px-4">Assigned To</th>
-                <th className="border border-gray-200 py-3 px-4">Actions</th>
-              </tr>
-            </thead>
+        <table className="w-full min-w-[900px] text-center border-collapse">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="py-3 px-4 text-left">Project</th>
+              <th className="py-3 px-4 text-left">Task</th>
+              <th className="py-3 px-4 text-left">Priority</th>
+              <th className="py-3 px-4 text-left">Assigned To</th>
+              <th className="py-3 px-4 text-center">Actions</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {tasks.length > 0 ? (
-                tasks.map((t) => (
+          <tbody>
+            {tasks.length > 0 ? (
+              tasks.map((t) => {
+                const proj = projects.find(
+                  (p) => Number(p.id) === Number(t.projectId)
+                );
+
+                return (
                   <tr
                     key={t.id}
-                    className="text-gray-700 hover:bg-blue-50 transition"
+                    className="border-b border-gray-300 hover:bg-blue-50 transition"
                   >
-                    <td className="border border-gray-200 py-3 px-4">
-                      {t.name}
-                    </td>
-                    <td className="border border-gray-200 py-3 px-4">
-                      {t.description || "-"}
-                    </td>
+                    <td className="py-3 px-4">{proj ? proj.name : "-"}</td>
+                    <td className="py-3 px-4">{t.name}</td>
                     <td
-                      className={`border border-gray-200 py-3 px-4 font-semibold ${
-                        t.priority === "Low"
-                          ? "text-green-600"
+                      className={`py-3 px-4 font-semibold ${
+                        t.priority === "High"
+                          ? "text-red-600"
                           : t.priority === "Medium"
                           ? "text-orange-500"
-                          : "text-red-600"
+                          : "text-green-600"
                       }`}
                     >
                       {t.priority}
                     </td>
-                    <td className="border border-gray-200 py-3 px-4">
-                      {t.assignedTo}
-                    </td>
-                    <td className="border border-gray-200 py-3 px-4">
-                      <div className="flex justify-center gap-4">
-                        <button
-                          onClick={() => handleEdit(t.id)}
-                          className="text-blue-500 hover:text-blue-700 transition"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(t.id)}
-                          className="text-red-500 hover:text-red-700 transition"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
+                    <td className="py-3 px-4">{t.assignedTo}</td>
+
+                    <td className="py-3 px-4 flex justify-center gap-4">
+                      <button
+                        onClick={() => handleEdit(t)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        <FaEdit />
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(t.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <FaTrash />
+                      </button>
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="py-4 text-gray-500 italic text-center"
-                  >
-                    No tasks added yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={5} className="py-5 text-gray-500 italic">
+                  No tasks added yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {/* === Modal Section === */}
+      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[999]">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-[600px] relative">
-            <h2 className="text-xl font-semibold mb-4 text-center text-gray-800">
-              {editingTask ? "Edit Task" : "Add New Task"}
+          <div className="bg-white p-6 rounded-xl w-[90%] max-w-[550px] shadow-xl">
+            <h2 className="text-xl font-semibold mb-4 text-center">
+              {editingId ? "Edit Task" : "Add New Task"}
             </h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 text-[14px]"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              {/* PROJECT DROPDOWN */}
+              <select
+                name="projectId"
+                value={form.projectId}
+                onChange={handleChange}
+                className="border p-2 rounded"
+                required
+              >
+                <option value="">Select Project</option>
+
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* TASK NAME */}
               <input
                 type="text"
                 name="name"
+                value={form.name}
                 placeholder="Task Name"
-                value={taskData.name}
                 onChange={handleChange}
+                className="border p-2 rounded"
                 required
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
               />
 
+              {/* DESCRIPTION */}
               <textarea
                 name="description"
+                value={form.description}
                 placeholder="Task Description"
-                value={taskData.description}
                 onChange={handleChange}
-                className="border p-2 rounded-md h-[70px] focus:ring-2 focus:ring-blue-400 outline-none"
-              ></textarea>
+                className="border p-2 rounded h-20"
+              />
 
+              {/* PRIORITY */}
               <select
                 name="priority"
-                value={taskData.priority}
+                value={form.priority}
                 onChange={handleChange}
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+                className="border p-2 rounded"
               >
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
               </select>
 
-              <input
-                type="text"
+              {/* EMPLOYEE DROPDOWN */}
+              <select
                 name="assignedTo"
-                placeholder="Assign To (Employee Name)"
-                value={taskData.assignedTo}
+                value={form.assignedTo}
                 onChange={handleChange}
+                className="border p-2 rounded"
                 required
-                className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              />
+                disabled={!selectedProject}
+              >
+                <option value="">
+                  {selectedProject ? "Select Employee" : "Select project first"}
+                </option>
 
+                {selectedProject?.team?.map((m, i) => (
+                  <option key={i} value={m.name}>
+                    {m.name} ({m.role})
+                  </option>
+                ))}
+              </select>
+
+              {/* BUTTONS */}
               <div className="flex justify-end gap-3 mt-4">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100"
+                  className="px-4 py-2 border rounded hover:bg-gray-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-2 rounded-md text-white font-semibold ${
-                    editingTask
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
                 >
-                  {editingTask ? "Update" : "Add"}
+                  {editingId ? "Update Task" : "Add Task"}
                 </button>
               </div>
             </form>
