@@ -32,6 +32,10 @@ import Tasks from "./components/Project/Tasks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+import Jobs from "./components/recruitment/Jobs";
+import Candidates from "./components/recruitment/Candidates";
+import Referrals from "./components/recruitment/Referrals";
+
 function Layout() {
   // ⭐ Global Projects State
   const [projects, setProjects] = useState(() => {
@@ -70,17 +74,15 @@ function Layout() {
         )}
 
         <main
-          className={`
-            bg-[#f9fafc] min-h-screen transition-all duration-500
-            ${hideLayout ? "pt-0" : "pt-[120px]"}
-            ${
-              isMobile
-                ? "w-full ml-0 px-4"
-                : isSidebarOpen
-                ? "ml-[260px] w-[calc(100%-260px)] px-6"
-                : "ml-[95px] w-[calc(100%-95px)] px-6"
-            }
-          `}
+          className={
+            "bg-[#f9fafc] min-h-screen transition-all duration-500 " +
+            (hideLayout ? "pt-0 " : "pt-[120px] ") +
+            (isMobile
+              ? "w-full ml-0 px-4 "
+              : isSidebarOpen
+              ? "ml-[260px] w-[calc(100%-260px)] px-6 "
+              : "ml-[95px] w-[calc(100%-95px)] px-6 ")
+          }
         >
           <div className="max-w-[1450px] mx-auto w-full">
 
@@ -117,6 +119,11 @@ function Layout() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/logout" element={<Logout />} />
 
+              {/* RECRUITMENT ROUTES */}
+              <Route path="/recruitment/jobs" element={<Jobs />} />
+              <Route path="/recruitment/candidates" element={<Candidates />} />
+              <Route path="/recruitment/referrals" element={<Referrals />} />
+
               <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
 
@@ -133,4 +140,4 @@ export default function App() {
       <Layout />
     </Router>
   );
-}
+};

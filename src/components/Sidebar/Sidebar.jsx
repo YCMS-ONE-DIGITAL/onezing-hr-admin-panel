@@ -6,6 +6,7 @@ import {
   FaCog,
   FaSignOutAlt,
   FaBriefcase,
+  FaUserTie,
 } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -37,6 +38,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     else if (path.includes("project") || path.includes("tasks"))
       setActiveMainMenu("project");
     else if (path.includes("reports")) setActiveMainMenu("reports");
+    else if (path.includes("recruitment")) setActiveMainMenu("recruitment");
     else if (path.includes("settings")) setActiveMainMenu("settings");
 
     if (!isSubmenu) setOpenMenu(null);
@@ -171,6 +173,47 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <FaChartBar className="text-lg" />
           <span className="max-md:hidden">Reports</span>
         </li>
+
+        <li
+          onClick={() => toggleMenu("recruitment")}
+          className={`${mainBtn} ${
+            activeMainMenu === "recruitment" ? active : ""
+          }`}
+        >
+          <FaUserTie className="text-lg" />
+          <span className="max-md:hidden">Recruitment</span>
+        </li>
+
+        {openMenu === "recruitment" && (
+          <ul className="flex flex-col mt-1">
+            <li
+              className={`${subBtn} ${
+                isActive("/recruitment/jobs") ? activeSub : ""
+              }`}
+              onClick={() => handleNavigation("/recruitment/jobs", true)}
+            >
+              Jobs
+            </li>
+
+            <li
+              className={`${subBtn} ${
+                isActive("/recruitment/candidates") ? activeSub : ""
+              }`}
+              onClick={() => handleNavigation("/recruitment/candidates", true)}
+            >
+              Candidates
+            </li>
+
+            <li
+              className={`${subBtn} ${
+                isActive("/recruitment/referrals") ? activeSub : ""
+              }`}
+              onClick={() => handleNavigation("/recruitment/referrals", true)}
+            >
+              Referrals
+            </li>
+          </ul>
+        )}
 
         <li
           onClick={() => handleNavigation("/settings")}
