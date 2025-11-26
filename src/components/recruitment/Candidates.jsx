@@ -1,9 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
-/* =========================================
-   JOB ROLE LIST (filters + dropdown)
-   ========================================= */
 const jobRoles = [
   "React Developer",
   "PHP Developer",
@@ -12,9 +9,6 @@ const jobRoles = [
   "Network Engineer",
 ];
 
-/* =========================================
-   DEFAULT CANDIDATES DATA
-   ========================================= */
 const defaultCandidates = [
   {
     id: "C-001",
@@ -42,9 +36,6 @@ const defaultCandidates = [
   },
 ];
 
-/* =========================================
-   STATUS BADGE COLORS
-   ========================================= */
 const statusColors = {
   New: "bg-blue-100 text-blue-700",
   Shortlisted: "bg-green-100 text-green-700",
@@ -54,15 +45,11 @@ const statusColors = {
 };
 
 export default function Candidates() {
-  /* =========================================
-     STATE: candidates + filters + modal + form
-     ========================================= */
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(defaultCandidates);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
 
-  /* FORM MODAL */
   const [showModal, setShowModal] = useState(false);
   const [editRow, setEditRow] = useState(null);
 
@@ -76,23 +63,6 @@ export default function Candidates() {
 
   const [form, setForm] = useState(emptyForm);
 
-  /* =========================================
-     LOCAL STORAGE LOAD
-     ========================================= */
-  useEffect(() => {
-    const saved = localStorage.getItem("candidates");
-    if (saved) setRows(JSON.parse(saved));
-    else setRows(defaultCandidates);
-  }, []);
-
-  /* SAVE TO LOCAL STORAGE */
-  useEffect(() => {
-    localStorage.setItem("candidates", JSON.stringify(rows));
-  }, [rows]);
-
-  /* =========================================
-     OPEN MODAL
-     ========================================= */
   const openAddModal = () => {
     setEditRow(null);
     setForm(emptyForm);
@@ -105,9 +75,6 @@ export default function Candidates() {
     setShowModal(true);
   };
 
-  /* =========================================
-     SAVE CANDIDATE
-     ========================================= */
   const handleSave = () => {
     if (!form.name || !form.email || !form.jobApplied || !form.experience) {
       alert("Please fill all fields");
@@ -115,7 +82,9 @@ export default function Candidates() {
     }
 
     if (editRow) {
-      setRows(rows.map((r) => (r.id === editRow.id ? { ...form, id: editRow.id } : r)));
+      setRows(
+        rows.map((r) => (r.id === editRow.id ? { ...form, id: editRow.id } : r))
+      );
     } else {
       setRows([
         ...rows,
@@ -126,18 +95,12 @@ export default function Candidates() {
     setShowModal(false);
   };
 
-  /* =========================================
-     DELETE CANDIDATE
-     ========================================= */
   const deleteRow = (id) => {
     if (confirm("Delete Candidate?")) {
       setRows(rows.filter((r) => r.id !== id));
     }
   };
 
-  /* =========================================
-     FILTER + SEARCH
-     ========================================= */
   const visibleRows = useMemo(() => {
     let data = [...rows];
 
@@ -151,133 +114,114 @@ export default function Candidates() {
       );
     }
 
-    if (filterRole !== "All") {
-      data = data.filter((r) => r.jobApplied === filterRole);
-    }
-
-    if (filterStatus !== "All") {
-      data = data.filter((r) => r.status === filterStatus);
-    }
+    if (filterRole !== "All") data = data.filter((r) => r.jobApplied === filterRole);
+    if (filterStatus !== "All") data = data.filter((r) => r.status === filterStatus);
 
     return data;
   }, [rows, search, filterRole, filterStatus]);
 
-  /* =========================================
-     PAGE UI
-     ========================================= */
   return (
-    <div
-      className="py-6"
-      style={{
-        marginLeft: "210px",
-        paddingTop: "40px",
-        paddingLeft: "10px",
-        paddingRight: "20px",
-      }}
-    >
-      {/* ================= HEADER ================= */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Candidates</h1>
+    <div className="py-6 ml-[210px] px-4 pt-10 max-w-full
+                    md:ml-[210px]
+                    max-md:ml-0 max-md:pt-16 max-md:px-5">
+
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-6 max-md:flex-row max-md:gap-4 max-md:mb-8">
+        <h1 className="text-2xl font-semibold max-md:text-xl">Candidates</h1>
 
         <button
           onClick={openAddModal}
-          className="px-4 py-2 bg-orange-500 text-white rounded-md flex items-center gap-2 shadow"
+          className="px-4 py-2 bg-orange-500 text-white rounded-md flex items-center gap-2 shadow
+                     max-md:px-3 max-md:py-1.5 max-md:text-sm"
         >
           <FaPlus /> Add Candidate
         </button>
       </div>
 
-      {/* ================= FILTER BAR ================= */}
-      <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
+      {/* FILTERS */}
+      <div className="bg-white rounded-xl shadow-sm border p-5 mb-6 
+                      max-md:mb-8 max-md:p-4 space-y-4">
+
         <div className="flex flex-wrap gap-4 items-center">
 
           {/* Search */}
-          <div className="relative">
+          <div className="relative w-64 max-md:w-full">
             <FaSearch className="absolute left-3 top-3 text-gray-400 text-xs" />
             <input
               placeholder="Search candidates..."
-              className="border pl-8 pr-3 py-2 rounded-md text-sm w-64"
+              className="border pl-8 pr-3 py-2 rounded-md text-sm w-full"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          {/* Job Role Filter */}
+          {/* Job Role */}
           <select
-            className="border px-3 py-2 rounded-md text-sm"
+            className="border px-3 py-2 rounded-md text-sm max-md:w-full"
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
           >
             <option value="All">Job Role</option>
             {jobRoles.map((job) => (
-              <option key={job} value={job}>
-                {job}
-              </option>
+              <option key={job} value={job}>{job}</option>
             ))}
           </select>
 
-          {/* Status Filter */}
+          {/* Status */}
           <select
-            className="border px-3 py-2 rounded-md text-sm"
+            className="border px-3 py-2 rounded-md text-sm max-md:w-full"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
             <option value="All">Status</option>
-            <option value="New">New</option>
-            <option value="Shortlisted">Shortlisted</option>
-            <option value="Interview">Interview</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Hired">Hired</option>
+            <option>New</option>
+            <option>Shortlisted</option>
+            <option>Interview</option>
+            <option>Rejected</option>
+            <option>Hired</option>
           </select>
+
         </div>
       </div>
 
-      {/* ================= TABLE ================= */}
-      <div className="bg-white rounded-xl shadow-sm border overflow-x-auto">
+      {/* TABLE */}
+      <div className="bg-white rounded-xl shadow-sm border
+                      overflow-x-auto p-3 max-md:mt-4">
+
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="bg-slate-50 text-gray-700">
-              <th className="px-6 py-3 text-left w-8">
-                <input type="checkbox" />
-              </th>
-              <th className="px-3 py-3 text-left">ID</th>
-              <th className="px-3 py-3 text-left">Candidate</th>
-              <th className="px-3 py-3 text-left">Job Applied</th>
-              <th className="px-3 py-3 text-left">Experience</th>
-              <th className="px-3 py-3 text-left">Status</th>
-              <th className="px-3 py-3 text-right">Actions</th>
+            <tr className="bg-slate-50 text-gray-700 h-12">
+              <th className="px-6 text-left w-8"><input type="checkbox" /></th>
+              <th className="px-3 text-left">ID</th>
+              <th className="px-3 text-left">Candidate</th>
+              <th className="px-3 text-left">Job Applied</th>
+              <th className="px-3 text-left">Experience</th>
+              <th className="px-3 text-left">Status</th>
+              <th className="px-3 text-right">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {visibleRows.map((r, i) => (
-              <tr key={r.id} className={i % 2 ? "bg-slate-50/40" : "bg-white"}>
-                <td className="px-6 py-3">
-                  <input type="checkbox" />
-                </td>
+              <tr key={r.id} className={`${i % 2 ? "bg-slate-50/40" : "bg-white"} h-14`}>
+                <td className="px-6"><input type="checkbox" /></td>
+                <td className="px-3">{r.id}</td>
 
-                <td className="px-3 py-3">{r.id}</td>
-
-                {/* ONLY NAME + EMAIL (NO AVATAR) */}
-                <td className="px-3 py-3">
+                <td className="px-3">
                   <div className="font-medium">{r.name}</div>
                   <div className="text-xs text-gray-500">{r.email}</div>
                 </td>
 
-                <td className="px-3 py-3">{r.jobApplied}</td>
+                <td className="px-3">{r.jobApplied}</td>
+                <td className="px-3">{r.experience}</td>
 
-                <td className="px-3 py-3">{r.experience}</td>
-
-                <td className="px-3 py-3">
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${statusColors[r.status]}`}
-                  >
+                <td className="px-3">
+                  <span className={`px-2 py-1 rounded text-xs ${statusColors[r.status]}`}>
                     {r.status}
                   </span>
                 </td>
 
-                {/* ACTIONS */}
-                <td className="px-3 py-3 text-right">
+                <td className="px-3 text-right">
                   <div className="flex items-center justify-end gap-3 text-gray-600">
                     <button onClick={() => openEditModal(r)}>
                       <FaEdit className="hover:text-blue-600" />
@@ -301,10 +245,10 @@ export default function Candidates() {
         </table>
       </div>
 
-      {/* ================= MODAL ================= */}
+      {/* MODAL */}
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black/20 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-[420px] animate-popup">
+          <div className="bg-white p-6 rounded-xl shadow-xl w-[420px] max-md:w-[90%] scale-95 animate-[fadeIn_.2s_ease-out]">
             <h2 className="text-lg font-semibold mb-4">
               {editRow ? "Edit Candidate" : "Add Candidate"}
             </h2>
@@ -331,9 +275,7 @@ export default function Candidates() {
               >
                 <option value="">Select Job</option>
                 {jobRoles.map((j) => (
-                  <option key={j} value={j}>
-                    {j}
-                  </option>
+                  <option key={j} value={j}>{j}</option>
                 ))}
               </select>
 
@@ -341,9 +283,7 @@ export default function Candidates() {
                 placeholder="Experience (e.g. 2 years)"
                 className="border p-2 w-full rounded"
                 value={form.experience}
-                onChange={(e) =>
-                  setForm({ ...form, experience: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, experience: e.target.value })}
               />
 
               <select
@@ -375,17 +315,6 @@ export default function Candidates() {
           </div>
         </div>
       )}
-
-      {/* MODAL ANIMATION */}
-      <style>{`
-        @keyframes popup {
-          0% { transform: scale(0.9); opacity: 0 }
-          100% { transform: scale(1); opacity: 1 }
-        }
-        .animate-popup {
-          animation: popup 0.25s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

@@ -74,7 +74,6 @@ export default function Project() {
 
   const [form, setForm] = useState(emptyProject);
 
-  // TEAM INPUT STATE
   const [member, setMember] = useState({ name: "", role: "" });
 
   const addTeamMember = () => {
@@ -184,13 +183,26 @@ export default function Project() {
   };
 
   return (
-    <div className="absolute top-[95px] left-[260px] right-0 bottom-0 bg-[#f7f8fc] p-8 overflow-y-auto font-[Poppins]">
+    <div
+      className="
+        absolute 
+        top-[95px] left-[260px] right-0 bottom-0
+        bg-[#f7f8fc]
+        p-8
+        overflow-y-auto
+        font-[Poppins]
+
+        max-md:left-0 
+        max-md:top-[120px] 
+        max-md:p-4
+      "
+    >
 
       <h1 className="text-center text-[28px] font-semibold mb-6">
         Project Management
       </h1>
 
-      <div className="flex justify-between items-center mb-6 max-w-[1200px] mx-auto">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 max-w-[1200px] mx-auto gap-3">
         <h2 className="text-[20px] font-semibold">All Projects</h2>
 
         <button
@@ -299,7 +311,6 @@ export default function Project() {
         })}
       </div>
 
-      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-start justify-center pt-20 p-4 z-[999]">
 
@@ -395,7 +406,6 @@ export default function Project() {
                 </select>
               </div>
 
-              {/* SUMMARY */}
               <div className="md:col-span-2 flex flex-col">
                 <label className="text-gray-700 mb-1 font-medium">Summary</label>
                 <textarea
@@ -408,7 +418,6 @@ export default function Project() {
                 ></textarea>
               </div>
 
-              {/* TEAM SECTION */}
               <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-3">
 
                 <input
@@ -447,7 +456,6 @@ export default function Project() {
                 </button>
               </div>
 
-              {/* TEAM LIST */}
               {form.team.length > 0 && (
                 <div className="md:col-span-2 mt-3 space-y-2">
                   {form.team.map((m, index) => (
@@ -471,7 +479,6 @@ export default function Project() {
                 </div>
               )}
 
-              {/* SUBMIT */}
               <div className="md:col-span-2">
                 <button
                   type="submit"

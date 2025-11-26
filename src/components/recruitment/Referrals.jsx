@@ -1,9 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
-/* =========================================
-   JOB ICON MAP
-   ========================================= */
+/* JOB ICON MAP */
 const jobIconMap = {
   "Senior IOS Developer": "https://cdn-icons-png.flaticon.com/512/731/731985.png",
   "Junior PHP Developer": "https://cdn-icons-png.flaticon.com/512/919/919830.png",
@@ -12,9 +10,7 @@ const jobIconMap = {
   "Senior Laravel Developer": "https://cdn-icons-png.flaticon.com/512/5968/5968371.png",
 };
 
-/* =========================================
-   DEFAULT REFERRALS DATA
-   ========================================= */
+/* SAMPLE DATA */
 const defaultReferrals = [
   {
     id: "Reff-001",
@@ -34,20 +30,24 @@ const defaultReferrals = [
     candidateEmail: "sandra@example.com",
     bonus: 100,
   },
+  {
+    id: "Reff-003",
+    referrerName: "Harvey Smith",
+    referrerRole: "Developer",
+    jobTitle: "Network Engineer",
+    candidateName: "John Harris",
+    candidateEmail: "john@example.com",
+    bonus: 300,
+  },
 ];
 
 export default function Referrals() {
-  /* =========================================
-     STATE: referrals + modal + form
-     ========================================= */
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(defaultReferrals);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
-  const [sortOption, setSortOption] = useState("last7");
   const [showModal, setShowModal] = useState(false);
   const [editRow, setEditRow] = useState(null);
 
-  /* FORM DATA */
   const emptyForm = {
     referrerName: "",
     referrerRole: "",
@@ -59,23 +59,6 @@ export default function Referrals() {
 
   const [form, setForm] = useState(emptyForm);
 
-  /* =========================================
-     LOCAL STORAGE LOAD
-     ========================================= */
-  useEffect(() => {
-    const saved = localStorage.getItem("referrals");
-    if (saved) setRows(JSON.parse(saved));
-    else setRows(defaultReferrals);
-  }, []);
-
-  /* SAVE TO LOCAL STORAGE */
-  useEffect(() => {
-    localStorage.setItem("referrals", JSON.stringify(rows));
-  }, [rows]);
-
-  /* =========================================
-     OPEN MODAL
-     ========================================= */
   const openAddModal = () => {
     setEditRow(null);
     setForm(emptyForm);
@@ -88,9 +71,6 @@ export default function Referrals() {
     setShowModal(true);
   };
 
-  /* =========================================
-     SAVE REFERRAL
-     ========================================= */
   const handleSave = () => {
     if (
       !form.referrerName ||
@@ -105,41 +85,28 @@ export default function Referrals() {
     }
 
     if (editRow) {
-      setRows(
-        rows.map((r) =>
-          r.id === editRow.id ? { ...form, id: editRow.id } : r
-        )
-      );
+      setRows(rows.map((r) => (r.id === editRow.id ? { ...form, id: editRow.id } : r)));
     } else {
       setRows([
         ...rows,
-        {
-          id: "Reff-" + String(rows.length + 1).padStart(3, "0"),
-          ...form,
-        },
+        { id: "Reff-" + String(rows.length + 1).padStart(3, "0"), ...form },
       ]);
     }
 
     setShowModal(false);
   };
 
-  /* =========================================
-     DELETE REFERRAL
-     ========================================= */
   const deleteRow = (id) => {
     if (confirm("Delete this referral?")) {
       setRows(rows.filter((r) => r.id !== id));
     }
   };
 
-  /* =========================================
-     FILTER + SEARCH
-     ========================================= */
   const visibleRows = useMemo(() => {
     let data = [...rows];
+    const q = search.toLowerCase();
 
     if (search.trim()) {
-      const q = search.toLowerCase();
       data = data.filter(
         (r) =>
           r.referrerName.toLowerCase().includes(q) ||
@@ -148,47 +115,37 @@ export default function Referrals() {
       );
     }
 
-    if (roleFilter !== "All") {
-      data = data.filter((r) => r.referrerRole === roleFilter);
-    }
+    if (roleFilter !== "All") data = data.filter((r) => r.referrerRole === roleFilter);
 
     return data;
   }, [rows, search, roleFilter]);
 
-  /* =========================================
-     PAGE UI
-     ========================================= */
   return (
-    <div
-      className="py-6"
-      style={{
-        marginLeft: "200px",
-        paddingTop: "40px",
-        paddingLeft: "10px",
-        paddingRight: "20px",
-      }}
-    >
+    <div className="py-6 ml-[200px] pt-10 px-5 max-md:ml-0 max-md:pt-15">
+
       {/* PAGE HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Referrals</h1>
+      <div className="flex items-center justify-between mb-6 max-md:flex-row max-md:gap-4">
+        <h1 className="text-2xl font-semibold max-md:text-xl">Referrals</h1>
 
         <button
           onClick={openAddModal}
-          className="px-4 py-2 bg-orange-500 text-white rounded-md flex items-center gap-2 shadow"
+          className="px-4 py-2 bg-orange-500 text-white rounded-md flex items-center gap-2 shadow max-md:px-3 max-md:py-1.5 max-md:text-sm"
         >
           <FaPlus /> Add Referral
         </button>
       </div>
 
       {/* MAIN CARD */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 max-md:w-full max-md:max-w-[480px] max-md:mx-auto">
+
         {/* CARD HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b max-md:flex-col max-md:items-start max-md:gap-4">
           <h2 className="font-semibold">Referrals List</h2>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 max-md:flex-col max-md:w-full max-md:gap-3">
+
             <select
-              className="border px-3 py-1 rounded-md text-sm"
+              className="border px-3 py-1 rounded-md text-sm max-md:w-full"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
             >
@@ -199,68 +156,61 @@ export default function Referrals() {
               <option value="Manager">Manager</option>
             </select>
 
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-2.5 text-gray-400 text-xs" />
+            <div className="relative w-48 max-md:w-full">
+              <FaSearch className="absolute left-3 top-3 text-gray-400 text-xs" />
               <input
-                className="border pl-8 pr-3 py-1.5 rounded-md text-sm w-48"
-                placeholder="Search"
+                className="border pl-8 pr-3 py-2 rounded-md text-sm w-full"
+                placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+
           </div>
         </div>
 
         {/* TABLE */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-md:px-3 max-md:py-2 max-md:rounded-lg max-md:border max-md:mt-3">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 text-gray-700">
-                <th className="px-6 py-3 text-left w-8">
-                  <input type="checkbox" />
-                </th>
-                <th className="px-3 py-3 text-left">Referrals ID</th>
-                <th className="px-3 py-3 text-left">Referrer Name</th>
-                <th className="px-3 py-3 text-left">Job Referred</th>
-                <th className="px-3 py-3 text-left">Referee Name</th>
-                <th className="px-3 py-3 text-left">Bonus</th>
-                <th className="px-3 py-3 text-right">Actions</th>
+              <tr className="bg-slate-50 text-gray-700 h-12">
+                <th className="px-6 text-left"><input type="checkbox" /></th>
+                <th className="px-3 text-left">Referrals ID</th>
+                <th className="px-3 text-left">Referrer Name</th>
+                <th className="px-3 text-left">Job Referred</th>
+                <th className="px-3 text-left">Referee Name</th>
+                <th className="px-3 text-left">Bonus</th>
+                <th className="px-3 text-right">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {visibleRows.map((r, i) => (
-                <tr key={r.id} className={i % 2 ? "bg-slate-50/40" : "bg-white"}>
-                  <td className="px-6 py-3">
-                    <input type="checkbox" />
-                  </td>
+                <tr key={r.id} className={`${i % 2 ? "bg-slate-50/40" : "bg-white"} h-14`}>
+                  <td className="px-6"><input type="checkbox" /></td>
 
-                  <td className="px-3 py-3">{r.id}</td>
+                  <td className="px-3">{r.id}</td>
 
-                  {/* ONLY NAME + DESIGNATION (NO PHOTO) */}
-                  <td className="px-3 py-3">
+                  <td className="px-3">
                     <div className="font-medium">{r.referrerName}</div>
                     <div className="text-xs text-gray-500">{r.referrerRole}</div>
                   </td>
 
-                  <td className="px-3 py-3">
+                  <td className="px-3">
                     <div className="flex items-center gap-2">
-                      <img
-                        src={jobIconMap[r.jobTitle]}
-                        className="w-6 h-6"
-                      />
+                      <img src={jobIconMap[r.jobTitle]} className="w-6 h-6" />
                       {r.jobTitle}
                     </div>
                   </td>
 
-                  <td className="px-3 py-3">
+                  <td className="px-3">
                     <div>{r.candidateName}</div>
                     <div className="text-xs text-gray-500">{r.candidateEmail}</div>
                   </td>
 
-                  <td className="px-3 py-3">${r.bonus}</td>
+                  <td className="px-3">${r.bonus}</td>
 
-                  <td className="px-3 py-3 text-right">
+                  <td className="px-3 text-right">
                     <div className="flex items-center justify-end gap-3 text-gray-600">
                       <button onClick={() => openEditModal(r)}>
                         <FaEdit className="hover:text-blue-600" />
@@ -281,6 +231,7 @@ export default function Referrals() {
                 </tr>
               )}
             </tbody>
+
           </table>
         </div>
       </div>
@@ -288,7 +239,7 @@ export default function Referrals() {
       {/* MODAL */}
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black/20 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-[420px] animate-popup">
+          <div className="bg-white p-6 rounded-xl shadow-xl w-[420px] max-md:w-[90%] scale-95 animate-[fadeIn_.2s_ease-out]">
             <h2 className="text-lg font-semibold mb-4">
               {editRow ? "Edit Referral" : "Add Referral"}
             </h2>
@@ -332,9 +283,7 @@ export default function Referrals() {
                 placeholder="Candidate Email"
                 className="border p-2 w-full rounded"
                 value={form.candidateEmail}
-                onChange={(e) =>
-                  setForm({ ...form, candidateEmail: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, candidateEmail: e.target.value })}
               />
 
               <input
@@ -363,16 +312,6 @@ export default function Referrals() {
         </div>
       )}
 
-      {/* MODAL ANIMATION */}
-      <style>{`
-        @keyframes popup {
-          0% { transform: scale(0.9); opacity: 0 }
-          100% { transform: scale(1); opacity: 1 }
-        }
-        .animate-popup {
-          animation: popup 0.25s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

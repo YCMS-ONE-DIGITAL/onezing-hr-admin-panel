@@ -88,7 +88,7 @@ export default function Tasks() {
       className="
         absolute top-[115px] left-[250px] right-0 bottom-0 bg-[#f8f9fb]
         p-8 overflow-y-auto font-[Poppins]
-        max-md:left-0 max-md:top-[60px] max-md:p-4
+        max-md:left-0 max-md:top-[120px] max-md:p-4
       "
     >
       {/* PAGE TITLE */}

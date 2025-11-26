@@ -42,17 +42,22 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     else if (path.includes("settings")) setActiveMainMenu("settings");
 
     if (!isSubmenu) setOpenMenu(null);
+
     if (window.innerWidth < 768) toggleSidebar();
   };
 
+  /* MAIN BUTTON DESIGN */
   const mainBtn =
-    "flex items-center gap-3 px-5 py-3 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer transition-all text-[15px] max-md:flex-col max-md:text-[10px]";
+    "flex items-center gap-3 px-5 py-3 text-gray-800 hover:bg-gray-200 rounded-md cursor-pointer transition-all text-[15px]";
 
+  /* SUBMENU */
   const subBtn =
-    "ml-12 text-[14px] cursor-pointer text-gray-700 hover:text-black transition-all max-md:ml-0";
+    "ml-12 text-[14px] cursor-pointer text-gray-700 hover:text-black transition-all";
 
-  const active = "bg-[#f9fafb] border-l-4 border-blue-600 font-semibold text-blue-700";
-  const activeSub = "font-semibold text-black ml-12 max-md:ml-0";
+  const active =
+    "bg-[#f9fafb] border-l-4 border-blue-600 font-semibold text-blue-700";
+  const activeSub = "font-semibold text-black ml-12";
+
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -60,17 +65,24 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       className={`
         fixed top-[95px] left-0
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        w-[260px] bg-gray-100 shadow-md z-[999] min-h-screen
+        w-[260px] min-w-[260px]
+        bg-gray-100 shadow-md z-[999]
+        min-h-screen
+        transition-transform duration-300
+        overflow-y-auto
       `}
     >
-      <div className="flex flex-col items-center py-4 border-b border-gray-300">
-        <img src={Logo} alt="Logo" className="w-12 h-12 mb-1" />
-        <span className="text-sm font-semibold text-gray-700 max-md:hidden">
+      {/* LOGO + NAME */}
+      <div className="flex flex-col items-center py-5 border-b border-gray-300">
+        <img src={Logo} alt="Logo" className="w-12 h-12 mb-2" />
+        <span className="text-base font-semibold text-gray-800">
           One Zing
         </span>
+        <span className="text-xs text-gray-500">Quick Access Panel</span>
       </div>
 
-      <ul className="flex flex-col mt-3 space-y-2 px-3">
+      {/* MENU ITEMS */}
+      <ul className="flex flex-col mt-4 space-y-2 px-3">
 
         <li
           onClick={() => handleNavigation("/dashboard")}
@@ -79,9 +91,10 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaHome className="text-lg" />
-          <span className="max-md:hidden">Dashboard</span>
+          <span>Dashboard</span>
         </li>
 
+        {/* HR MANAGEMENT */}
         <li
           onClick={() => toggleMenu("hr")}
           className={`${mainBtn} ${
@@ -89,11 +102,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaUsers className="text-lg" />
-          <span className="max-md:hidden">HR Management</span>
+          <span>HR Management</span>
         </li>
 
         {openMenu === "hr" && (
-          <ul className="flex flex-col mt-1">
+          <ul className="flex flex-col mt-1 mb-1 space-y-2">
             <li
               className={`${subBtn} ${
                 isActive("/employees") ? activeSub : ""
@@ -132,6 +145,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </ul>
         )}
 
+        {/* PROJECT MANAGEMENT */}
         <li
           onClick={() => toggleMenu("project")}
           className={`${mainBtn} ${
@@ -139,11 +153,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaBriefcase className="text-lg" />
-          <span className="max-md:hidden">Project Management</span>
+          <span>Project Management</span>
         </li>
 
         {openMenu === "project" && (
-          <ul className="flex flex-col mt-1">
+          <ul className="flex flex-col mt-1 mb-1 space-y-2">
             <li
               className={`${subBtn} ${
                 isActive("/project") ? activeSub : ""
@@ -164,6 +178,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </ul>
         )}
 
+        {/* REPORTS */}
         <li
           onClick={() => handleNavigation("/reports")}
           className={`${mainBtn} ${
@@ -171,9 +186,10 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaChartBar className="text-lg" />
-          <span className="max-md:hidden">Reports</span>
+          <span>Reports</span>
         </li>
 
+        {/* RECRUITMENT */}
         <li
           onClick={() => toggleMenu("recruitment")}
           className={`${mainBtn} ${
@@ -181,11 +197,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaUserTie className="text-lg" />
-          <span className="max-md:hidden">Recruitment</span>
+          <span>Recruitment</span>
         </li>
 
         {openMenu === "recruitment" && (
-          <ul className="flex flex-col mt-1">
+          <ul className="flex flex-col mt-1 mb-1 space-y-2">
             <li
               className={`${subBtn} ${
                 isActive("/recruitment/jobs") ? activeSub : ""
@@ -215,6 +231,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </ul>
         )}
 
+        {/* SETTINGS */}
         <li
           onClick={() => handleNavigation("/settings")}
           className={`${mainBtn} ${
@@ -222,17 +239,17 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           }`}
         >
           <FaCog className="text-lg" />
-          <span className="max-md:hidden">Settings</span>
+          <span>Settings</span>
         </li>
 
+        {/* LOGOUT */}
         <li
           onClick={() => handleNavigation("/logout")}
           className="flex items-center gap-3 px-5 py-3 text-red-600 hover:bg-red-100 rounded-md cursor-pointer mt-auto mb-3"
         >
           <FaSignOutAlt className="text-lg" />
-          <span className="max-md:hidden">Logout</span>
+          <span>Logout</span>
         </li>
-
       </ul>
     </div>
   );

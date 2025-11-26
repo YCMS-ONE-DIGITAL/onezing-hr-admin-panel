@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   FaMapMarkerAlt,
   FaDollarSign,
@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 
 /* ===========================
-   ICON MAP: job position → logo
+   ICON MAP
    =========================== */
 const iconMap = {
   "PHP Developer": "https://cdn-icons-png.flaticon.com/512/919/919830.png",
@@ -23,8 +23,53 @@ const iconMap = {
 
 const defaultIcon = "https://cdn-icons-png.flaticon.com/512/919/919851.png";
 
+/* ===========================
+   SAMPLE DEFAULT JOBS
+   =========================== */
+const defaultJobs = [
+  {
+    id: 101,
+    title: "React Developer",
+    location: "Pune, India",
+    salary: "25,000 - 40,000 / month",
+    experience: "2 years of experience",
+    type: "Full Time",
+    level: "Expert",
+    applicants: 18,
+    filled: 5,
+    total: 20,
+    icon: iconMap["React Developer"],
+  },
+  {
+    id: 102,
+    title: "PHP Developer",
+    location: "Mumbai, India",
+    salary: "20,000 - 30,000 / month",
+    experience: "1 year of experience",
+    type: "Full Time",
+    level: "Intermediate",
+    applicants: 12,
+    filled: 7,
+    total: 15,
+    icon: iconMap["PHP Developer"],
+  },
+  {
+    id: 103,
+    title: "Android Developer",
+    location: "Bangalore, India",
+    salary: "30,000 - 45,000 / month",
+    experience: "3 years of experience",
+    type: "Part Time",
+    level: "Expert",
+    applicants: 9,
+    filled: 3,
+    total: 10,
+    icon: iconMap["Android Developer"],
+  },
+];
+
 export default function Jobx() {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(defaultJobs);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState("All");
   const [filterType, setFilterType] = useState("All");
@@ -41,17 +86,6 @@ export default function Jobx() {
   };
 
   const [form, setForm] = useState(emptyForm);
-
-  /* Load jobs from LocalStorage */
-  useEffect(() => {
-    const saved = localStorage.getItem("jobs");
-    if (saved) setJobs(JSON.parse(saved));
-  }, []);
-
-  /* Save jobs to LocalStorage */
-  useEffect(() => {
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-  }, [jobs]);
 
   /* OPEN ADD MODAL */
   const openAddModal = () => {
@@ -94,9 +128,9 @@ export default function Jobx() {
         ...jobs,
         {
           id: Date.now(),
-          applicants: 25,
-          filled: 10,
-          total: 25,
+          applicants: 0,
+          filled: 0,
+          total: 10,
           icon: computedIcon,
           ...form,
         },
@@ -113,7 +147,7 @@ export default function Jobx() {
     }
   };
 
-  /* SEARCH + FILTERS */
+  /* FILTERED LIST */
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
       job.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -127,15 +161,21 @@ export default function Jobx() {
 
   return (
     <div
-      className="py-6"
-      style={{
-        marginLeft: "220px",
-        paddingTop: "40px",
-        paddingLeft: "20px",
-        paddingRight: "20px",
-        maxWidth: "calc(100% - 260px)",
-        overflowX: "hidden",
-      }}
+      className="
+        py-6 
+        bg-[#f8f9fb]
+
+        /* DESKTOP */
+        ml-[220px]
+        max-w-[calc(100%-260px)]
+
+        /* MOBILE FIX */
+        max-md:ml-0 
+        max-md:max-w-full 
+        max-md:w-full 
+        max-md:px-4 
+        max-md:pt-[50px]
+      "
     >
       {/* HEADER */}
       <div className="flex items-center justify-between mb-8">
@@ -153,13 +193,13 @@ export default function Jobx() {
       <div className="flex flex-wrap gap-4 mb-8">
         <input
           placeholder="Search jobs..."
-          className="border px-3 py-2 rounded-md shadow-sm w-60"
+          className="border px-3 py-2 rounded-md shadow-sm w-60 max-md:w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
-          className="border px-3 py-2 rounded-md shadow-sm"
+          className="border px-3 py-2 rounded-md shadow-sm max-md:w-full"
           onChange={(e) => setFilterRole(e.target.value)}
         >
           <option value="All">All Roles</option>
@@ -168,7 +208,7 @@ export default function Jobx() {
         </select>
 
         <select
-          className="border px-3 py-2 rounded-md shadow-sm"
+          className="border px-3 py-2 rounded-md shadow-sm max-md:w-full"
           onChange={(e) => setFilterType(e.target.value)}
         >
           <option value="All">All Types</option>
@@ -178,14 +218,14 @@ export default function Jobx() {
       </div>
 
       {/* JOB CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-md:place-items-center">
         {filteredJobs.map((job) => (
           <div
             key={job.id}
             className="bg-white rounded-xl shadow-sm border border-gray-200 
-                       p-5 hover:shadow-md transition-all duration-200"
+                       p-5 hover:shadow-md transition-all duration-200 w-full max-w-[340px]"
           >
-            {/* CARD HEADER */}
+            {/* HEADER */}
             <div className="-mx-5 -mt-5 mb-4 px-5 py-3 bg-slate-50 rounded-t-xl border-b border-gray-100 flex items-center gap-4">
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
                 <img src={job.icon || defaultIcon} className="w-8 h-8" />
@@ -211,7 +251,7 @@ export default function Jobx() {
               </p>
             </div>
 
-            {/* TAGS (CLEAN — NO PROGRESS BAR) */}
+            {/* TAGS */}
             <div className="mt-2">
               <div className="flex gap-2 mb-3">
                 <span className="px-3 py-1 rounded-full text-xs bg-pink-100 text-pink-700">
@@ -223,7 +263,7 @@ export default function Jobx() {
               </div>
             </div>
 
-            {/* ACTION BUTTONS (NO BLACK BORDER) */}
+            {/* ACTION BUTTONS */}
             <div className="flex justify-between mt-3">
               <button
                 onClick={() => openEditModal(job)}
@@ -249,20 +289,17 @@ export default function Jobx() {
           <div
             className="pointer-events-auto bg-white/90 backdrop-blur-md 
                        p-6 rounded-xl shadow-xl border border-gray-200 
-                       w-[420px] animate-popup"
+                       w-[420px] animate-popup max-md:w-[90%]"
           >
             <h2 className="text-xl font-semibold mb-4">
               {editJob ? "Edit Job" : "Add New Job"}
             </h2>
 
             <div className="space-y-3">
-              {/* JOB POSITION DROPDOWN */}
               <select
                 className="border p-2 rounded-lg w-full"
                 value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               >
                 <option value="">Select Job Position</option>
                 <option value="PHP Developer">PHP Developer</option>
@@ -278,18 +315,14 @@ export default function Jobx() {
                 placeholder="Location"
                 className="border p-2 w-full rounded-lg"
                 value={form.location}
-                onChange={(e) =>
-                  setForm({ ...form, location: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
               />
 
               <input
                 placeholder="Salary"
                 className="border p-2 w-full rounded-lg"
                 value={form.salary}
-                onChange={(e) =>
-                  setForm({ ...form, salary: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, salary: e.target.value })}
               />
 
               <input
@@ -304,9 +337,7 @@ export default function Jobx() {
               <select
                 className="border p-2 rounded-lg w-full"
                 value={form.type}
-                onChange={(e) =>
-                  setForm({ ...form, type: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, type: e.target.value })}
               >
                 <option>Full Time</option>
                 <option>Part Time</option>
@@ -315,9 +346,7 @@ export default function Jobx() {
               <select
                 className="border p-2 rounded-lg w-full"
                 value={form.level}
-                onChange={(e) =>
-                  setForm({ ...form, level: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, level: e.target.value })}
               >
                 <option>Expert</option>
                 <option>Intermediate</option>
