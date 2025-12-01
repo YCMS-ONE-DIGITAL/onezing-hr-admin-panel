@@ -79,6 +79,24 @@ const Payroll = () => {
     setPayrollData((prev) => prev.filter((x) => x.id !== id));
   };
 
+  /* ------------------ EDIT POPUP ------------------ */
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editData, setEditData] = useState(null);
+
+  const handleEditPayroll = (emp) => {
+    setEditData(emp);
+    setIsEditOpen(true);
+  };
+
+  /* ------------------ ADD PAYROLL POPUP ------------------ */
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [newPayroll, setNewPayroll] = useState({
+    name: "",
+    designation: "",
+    salary: "₹30000",
+    deductions: "₹700",
+  });
+
   return (
     <div
       className="
@@ -97,8 +115,8 @@ const Payroll = () => {
         </p>
       </header>
 
-      {/* SUMMARY CARDS — EXACT ATTENDANCE STYLE */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8 w-[95%] md:w-[90%] mx-auto">
+      {/* SUMMARY CARDS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-10 w-[95%] md:w-[90%] mx-auto">
         {summaryData.map((card, i) => (
           <div
             key={i}
@@ -123,12 +141,22 @@ const Payroll = () => {
         ))}
       </div>
 
-      {/* TABLE TITLE */}
-      <h2 className="text-xl font-semibold mb-4 w-[95%] md:w-[90%] mx-auto max-md:text-[18px]">
-        Employee Payroll Summary
-      </h2>
+      {/* ⭐ HEADING + ADD BUTTON (SAME LINE) ⭐ */}
+      <div className="w-[95%] md:w-[90%] mx-auto mb-6 flex justify-between items-center">
+        <h2 className="text-xl font-semibold max-md:text-[18px]">
+          Employee Payroll Summary
+        </h2>
 
-      {/* TABLE — SAME AS ATTENDANCE TABLE BUT WIDTH INCREASED */}
+        <button
+          onClick={() => setIsAddOpen(true)}
+          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 
+          text-white px-4 py-2 rounded-md shadow-md text-sm"
+        >
+          + Add Payroll
+        </button>
+      </div>
+
+      {/* TABLE */}
       <div
         className="
           bg-white shadow-lg rounded-xl 
@@ -188,7 +216,10 @@ const Payroll = () => {
                     <FaEye />
                   </button>
 
-                  <button className="text-blue-500 hover:text-blue-700">
+                  <button
+                    onClick={() => handleEditPayroll(emp)}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
                     <FaEdit />
                   </button>
 
@@ -205,8 +236,216 @@ const Payroll = () => {
         </table>
       </div>
 
+      {/* PAYROLL SLIP POPUP */}
       {isSlipOpen && selectedSlip && (
         <SalarySlip slip={selectedSlip} onClose={() => setIsSlipOpen(false)} />
+      )}
+
+      {/* EDIT POPUP */}
+      {isEditOpen && editData && (
+        <div
+          className="
+            fixed inset-0 bg-black/40 backdrop-blur-sm
+            flex justify-center items-start pt-[80px]
+            z-[999]
+          "
+        >
+          <div className="bg-white w-[90%] max-w-[450px] p-6 rounded-xl shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Edit Payroll
+              </h2>
+              <button
+                onClick={() => setIsEditOpen(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                const updatedNetPay =
+                  "₹" +
+                  (parseInt(editData.salary.replace("₹", "")) -
+                    parseInt(editData.deductions.replace("₹", "")));
+
+                const updated = { ...editData, netPay: updatedNetPay };
+
+                setPayrollData((prev) =>
+                  prev.map((p) => (p.id === updated.id ? updated : p))
+                );
+
+                setIsEditOpen(false);
+              }}
+              className="flex flex-col gap-4"
+            >
+              <div>
+                <label className="font-medium text-gray-700">Salary</label>
+                <input
+                  type="text"
+                  value={editData.salary}
+                  onChange={(e) =>
+                    setEditData({ ...editData, salary: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-medium text-gray-700">Deductions</label>
+                <input
+                  type="text"
+                  value={editData.deductions}
+                  onChange={(e) =>
+                    setEditData({ ...editData, deductions: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-medium text-gray-700">Net Pay</label>
+                <input
+                  type="text"
+                  disabled
+                  value={
+                    "₹" +
+                    (parseInt(editData.salary.replace("₹", "")) -
+                      parseInt(editData.deductions.replace("₹", "")))
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 bg-gray-100"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ADD PAYROLL POPUP */}
+      {isAddOpen && (
+        <div
+          className="
+            fixed inset-0 bg-black/40 backdrop-blur-sm
+            flex justify-center items-start pt-[80px]
+            z-[999]
+          "
+        >
+          <div className="bg-white w-[90%] max-w-[450px] p-6 rounded-xl shadow-xl">
+
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Add Payroll
+              </h2>
+              <button
+                onClick={() => setIsAddOpen(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                const net =
+                  "₹" +
+                  (parseInt(newPayroll.salary.replace("₹", "")) -
+                    parseInt(newPayroll.deductions.replace("₹", "")));
+
+                const newData = {
+                  id: payrollData.length + 1,
+                  ...newPayroll,
+                  netPay: net,
+                  status: "Paid",
+                };
+
+                setPayrollData((prev) => [...prev, newData]);
+                setIsAddOpen(false);
+
+                setNewPayroll({
+                  name: "",
+                  designation: "",
+                  salary: "₹30000",
+                  deductions: "₹700",
+                });
+              }}
+              className="flex flex-col gap-4"
+            >
+              <div>
+                <label className="font-medium text-gray-700">Employee Name</label>
+                <input
+                  type="text"
+                  value={newPayroll.name}
+                  onChange={(e) =>
+                    setNewPayroll({ ...newPayroll, name: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-medium text-gray-700">Designation</label>
+                <input
+                  type="text"
+                  value={newPayroll.designation}
+                  onChange={(e) =>
+                    setNewPayroll({ ...newPayroll, designation: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-medium text-gray-700">Salary</label>
+                <input
+                  type="text"
+                  value={newPayroll.salary}
+                  onChange={(e) =>
+                    setNewPayroll({ ...newPayroll, salary: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-medium text-gray-700">Deductions</label>
+                <input
+                  type="text"
+                  value={newPayroll.deductions}
+                  onChange={(e) =>
+                    setNewPayroll({
+                      ...newPayroll,
+                      deductions: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+              >
+                Add Payroll
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

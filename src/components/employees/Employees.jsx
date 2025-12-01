@@ -110,7 +110,7 @@ export default function Employees() {
       id: newId,
       ...formData,
       name: `${formData.firstName} ${formData.lastName}`,
-      department: "General",
+      department: formData.department || "General",
     };
 
     if (editingEmployee) {
@@ -242,36 +242,217 @@ export default function Employees() {
         </table>
       </div>
 
-      {/* POPUP */}
+      {/* UPDATED MODERN POPUP */}
       {isModalOpen && (
         <div
           className="
-            fixed inset-0 bg-black/40 backdrop-blur-sm 
+            fixed inset-0 bg-black/50 backdrop-blur-sm 
             flex justify-center items-start
-            pt-[120px]
-            max-md:pt-[70px]
-            pb-6
             z-[999]
-          "
+            px-4
+            pt-[70px]
+            "
         >
           <div
-            className="
-              bg-white p-6 md:p-8 rounded-2xl shadow-2xl
-              w-[95%] max-w-[800px]
-              max-h-[85vh] overflow-y-auto scrollbar-hide
-              max-md:w-[90%] max-md:max-w-[380px]
-            "
-          >
+          className="
+            bg-white p-6 md:p-8 rounded-2xl shadow-2xl border border-gray-200
+            w-full max-w-[700px]
+            max-h-[88vh] overflow-y-auto scrollbar-hide
+          "
+        >
+          <style>
+            {`
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+              .scrollbar-hide {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+              }
+            `}
+          </style>
+          
             <style>{`
+              @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+              }
               .scrollbar-hide::-webkit-scrollbar { display: none; }
             `}</style>
 
-            <h2 className="text-xl font-semibold mb-6 text-center text-gray-800">
-              {editingEmployee ? "Edit Employee" : "Add New Employee"}
-            </h2>
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {editingEmployee ? "Edit Employee" : "Add Employee"}
+              </h2>
 
-            {/* FORM CONTENT (unchanged) */}
-            {/* ... */}
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* FORM */}
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Contact</label>
+                <input
+                  type="text"
+                  name="contact"
+                  value={formData.contact}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <label className="font-medium text-gray-700">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Designation</label>
+                <input
+                  type="text"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  required
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Joining Date</label>
+                <input
+                  type="date"
+                  name="joiningDate"
+                  value={formData.joiningDate}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Account Name</label>
+                <input
+                  type="text"
+                  name="accountName"
+                  value={formData.accountName}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Account Number</label>
+                <input
+                  type="text"
+                  name="accountNumber"
+                  value={formData.accountNumber}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Bank Name</label>
+                <input
+                  type="text"
+                  name="bankName"
+                  value={formData.bankName}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Branch Name</label>
+                <input
+                  type="text"
+                  name="branchName"
+                  value={formData.branchName}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-gray-700">Status</label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end md:col-span-2 gap-4 mt-4">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-5 py-2 rounded-md bg-gray-300 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow-md"
+                >
+                  {editingEmployee ? "Update" : "Add Employee"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

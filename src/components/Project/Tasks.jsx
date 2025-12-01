@@ -33,7 +33,7 @@ export default function Tasks() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // team safely load करा
+  // Load team safely
   const selectedProject = useMemo(() => {
     return projects.find((p) => p.id === Number(form.projectId));
   }, [form.projectId, projects]);
@@ -118,17 +118,18 @@ export default function Tasks() {
         <table className="w-full min-w-[900px] text-center border-collapse">
           <thead>
             <tr className="bg-blue-500 text-white">
-              <th className="py-3 px-4 text-left">Project</th>
-              <th className="py-3 px-4 text-left">Task</th>
-              <th className="py-3 px-4 text-left">Priority</th>
-              <th className="py-3 px-4 text-left">Assigned To</th>
+              <th className="py-3 px-4 text-center">SR</th>
+              <th className="py-3 px-4 text-center">Project</th>
+              <th className="py-3 px-4 text-center">Task</th>
+              <th className="py-3 px-4 text-center">Priority</th>
+              <th className="py-3 px-4 text-center">Assigned To</th>
               <th className="py-3 px-4 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {tasks.length > 0 ? (
-              tasks.map((t) => {
+              tasks.map((t, index) => {
                 const proj = projects.find(
                   (p) => Number(p.id) === Number(t.projectId)
                 );
@@ -138,6 +139,9 @@ export default function Tasks() {
                     key={t.id}
                     className="border-b border-gray-300 hover:bg-blue-50 transition"
                   >
+                    {/* SERIAL NUMBER COLUMN */}
+                    <td className="py-3 px-4">#{index + 1}</td>
+
                     <td className="py-3 px-4">{proj ? proj.name : "-"}</td>
                     <td className="py-3 px-4">{t.name}</td>
                     <td
@@ -173,7 +177,7 @@ export default function Tasks() {
               })
             ) : (
               <tr>
-                <td colSpan={5} className="py-5 text-gray-500 italic">
+                <td colSpan={6} className="py-5 text-gray-500 italic">
                   No tasks added yet.
                 </td>
               </tr>
