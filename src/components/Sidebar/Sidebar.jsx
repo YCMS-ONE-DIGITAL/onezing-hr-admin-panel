@@ -73,13 +73,24 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       `}
     >
       {/* LOGO + NAME */}
-      <div className="flex flex-col items-center py-5 border-b border-gray-300">
-        <img src={Logo} alt="Logo" className="w-12 h-12 mb-2" />
-        <span className="text-base font-semibold text-gray-800">
-          One Zing
-        </span>
-        <span className="text-xs text-gray-500">Quick Access Panel</span>
+      {/* LOGO + NAME */}
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-300">
+
+        {/* Logo Left */}
+        <img src={Logo} alt="Logo" className="w-12 h-12" />
+
+        {/* Text Right */}
+        <div className="flex flex-col leading-tight">
+          <span className="text-base font-semibold text-gray-800">
+            One Zing
+          </span>
+          <span className="text-xs text-gray-500">
+            Quick Access Panel
+          </span>
+        </div>
+
       </div>
+
 
       {/* MENU ITEMS */}
       <ul className="flex flex-col mt-4 space-y-2 px-3">
